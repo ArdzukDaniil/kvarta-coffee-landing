@@ -219,7 +219,10 @@ a{color:inherit}
 @media (min-width:960px){
   .nav{display:flex;gap:28px}
   .hero{grid-template-columns:1.1fr 1fr;align-items:center;padding-top:56px;gap:56px}
-  .cal{margin-top:12px}
+  .cal{align-self:center;margin-top:12px}
+  .cal__page{padding:30px 26px 34px;gap:24px}
+  .cal__num{font-size:clamp(10rem,6rem + 7vw,15rem)}
+  .week li{padding:14px 0 16px}
   .fresh{grid-template-columns:1fr 1.25fr;gap:56px}
   .steps{gap:0}
   .steps li{grid-template-columns:7rem 1fr;padding:22px 0}

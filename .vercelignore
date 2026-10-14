@@ -1,0 +1,9 @@
+.venv
+tests
+previews
+shots
+tools
+data
+.playwright-mcp
+kvarta-brief.pdf
+requirements-dev.txt
