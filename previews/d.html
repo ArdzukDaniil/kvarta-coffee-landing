@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>D — Базовый</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{--bg:#F5F3EF;--ink:#1B1A18;--muted:#6A665F;--accent:#2F5A45;--line:#E2DED6}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 18px/1.55 Onest,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 56px}
+.logo{font:700 24px/1 Onest;letter-spacing:-.02em}
+nav{display:flex;gap:30px;font-size:16px;color:var(--muted)}
+.btn{background:var(--accent);color:#fff;padding:15px 24px;border-radius:10px;font-weight:500;text-decoration:none;display:inline-block}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:40px 56px 0;align-items:center}
+h1{font:700 clamp(48px,5.4vw,84px)/1.02 Onest;letter-spacing:-.035em}
+.lead{font-size:20px;max-width:27em;margin:24px 0 32px;color:var(--muted)}
+.ghost{margin-left:16px;color:var(--ink);font-weight:500}
+.photo{height:560px;border-radius:16px;background:linear-gradient(160deg,#5b4a3d,#2a211b);display:grid;place-items:end start;padding:24px;color:#e9e2d8;font-size:14px;position:relative;overflow:hidden}
+.photo::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.12),transparent 60%)}
+.badge{position:absolute;top:24px;left:24px;background:var(--bg);color:var(--ink);border-radius:10px;padding:14px 18px;font-size:15px;z-index:1}
+.badge b{display:block;font-size:22px}
+.facts{margin:48px 56px 0;padding-top:28px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.facts b{display:block;font-size:30px;letter-spacing:-.02em}
+.facts span{color:var(--muted);font-size:16px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">кварта</div>
+  <nav><a>Кофе</a><a>Подписка</a><a>Доставка</a><a>Контакты</a></nav>
+  <a class="btn">Оставить заявку</a>
+</header>
+<section class="hero">
+  <div>
+    <h1>Свежеобжаренный кофе с&nbsp;доставкой по&nbsp;Минску</h1>
+    <p class="lead">Обжариваем по&nbsp;четвергам небольшими партиями, в&nbsp;пятницу привозим. Зерно приходит на&nbsp;1–3-й день после обжарки.</p>
+    <a class="btn">Оформить подписку</a><a class="ghost">Разовый заказ →</a>
+  </div>
+  <div class="photo"><div class="badge">Следующая обжарка<b>четверг, 15&nbsp;октября</b></div>[фото: зерно в&nbsp;охлаждающем лотке ростера, тёплый свет]</div>
+</section>
+<section class="facts">
+  <div><b>5 кг</b><span>одна партия</span></div>
+  <div><b>Чт → Пт</b><span>обжарка и&nbsp;доставка</span></div>
+  <div><b>1–3 дня</b><span>от&nbsp;ростера до&nbsp;вас</span></div>
+  <div><b>с 2019</b><span>Аня и&nbsp;Дмитрий, бывшие бариста</span></div>
+</section>
+</body>
+</html>

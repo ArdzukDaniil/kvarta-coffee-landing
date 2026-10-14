@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>B — Журнал обжарки</title>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,500&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{--sheet:#E4E8DE;--ink:#1E2F6B;--pencil:#4A4E55;--heat:#C9561E;--rule:#C6CDBF}
+*{box-sizing:border-box;margin:0}
+body{background:var(--sheet);color:var(--ink);font:400 18px/1.55 Literata,serif}
+.mono{font-family:"Martian Mono",monospace}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 56px;border-bottom:1.5px solid var(--ink)}
+.logo{font:700 30px/1 Literata;letter-spacing:-.01em}
+nav{display:flex;gap:28px;font:400 13px/1 "Martian Mono";text-transform:uppercase;letter-spacing:.06em}
+.btn{background:var(--ink);color:var(--sheet);padding:14px 20px;font:600 13px/1 "Martian Mono";text-transform:uppercase;letter-spacing:.06em;text-decoration:none;display:inline-block}
+.hero{padding:44px 56px 0;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.meta{display:grid;grid-template-columns:repeat(4,auto);gap:0;border:1.5px solid var(--ink);margin-bottom:36px;width:max-content}
+.meta div{padding:10px 16px;border-right:1px solid var(--ink);font:400 12px/1.4 "Martian Mono";text-transform:uppercase}
+.meta div:last-child{border:0}.meta b{display:block;font-size:16px;font-weight:600}
+h1{font:700 clamp(56px,6.4vw,100px)/.95 Literata;letter-spacing:-.025em}
+h1 em{font-weight:500;color:var(--heat)}
+.lead{font-size:20px;max-width:28em;margin:26px 0 30px;color:var(--pencil)}
+.ghost{margin-left:20px;font:600 13px/1 "Martian Mono";text-transform:uppercase;color:var(--ink)}
+.chart{border:1.5px solid var(--ink);background:
+ repeating-linear-gradient(0deg,transparent 0 31px,var(--rule) 31px 32px),
+ repeating-linear-gradient(90deg,transparent 0 31px,var(--rule) 31px 32px);position:relative;height:460px}
+.chart svg{position:absolute;inset:0;width:100%;height:100%}
+.lab{position:absolute;font:400 12px/1.3 "Martian Mono";color:var(--pencil);background:var(--sheet);padding:2px 6px}
+.hand{position:absolute;font:500 italic 20px/1.2 Literata;color:var(--heat)}
+.next{margin:56px 56px 0;border-top:1.5px solid var(--ink);display:grid;grid-template-columns:repeat(4,1fr)}
+.next>div{padding:24px 20px 0 0}
+.next .k{font:400 12px/1 "Martian Mono";text-transform:uppercase;color:var(--pencil)}
+.next .v{font:700 44px/1.1 Literata;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Кварта</div>
+  <nav><a>Кофе</a><a>Подписка</a><a>Доставка</a><a>Контакты</a></nav>
+  <a class="btn">Оставить заявку</a>
+</header>
+<section class="hero">
+  <div>
+    <div class="meta">
+      <div>Партия<b>5 кг</b></div><div>Обжарка<b>чт 15.10</b></div><div>Доставка<b>пт 16.10</b></div><div>У вас<b>1–3 день</b></div>
+    </div>
+    <h1>Кофе, который обжарили <em>на&nbsp;этой неделе</em></h1>
+    <p class="lead">Аня и&nbsp;Дмитрий с&nbsp;2019 года жарят зерно маленькими партиями в&nbsp;Минске. Каждый четверг — новая партия, в&nbsp;пятницу она уже у&nbsp;вас.</p>
+    <a class="btn">Оформить подписку</a><a class="ghost">Разовый заказ →</a>
+  </div>
+  <div class="chart">
+    <svg viewBox="0 0 600 460" preserveAspectRatio="none">
+      <path d="M0 120 C40 300 70 360 110 368 C190 340 260 260 330 200 C400 150 460 120 540 98 L600 92" fill="none" stroke="#C9561E" stroke-width="3"/>
+      <path d="M0 410 C120 380 240 330 360 300 C440 280 520 268 600 262" fill="none" stroke="#1E2F6B" stroke-width="1.5" stroke-dasharray="6 6"/>
+      <circle cx="430" cy="138" r="7" fill="#C9561E"/>
+    </svg>
+    <span class="lab" style="left:12px;top:12px">t° зерна, °C</span>
+    <span class="lab" style="right:12px;bottom:12px">мин 0 → 12</span>
+    <span class="hand" style="left:360px;top:90px">первый крэк</span>
+    <span class="hand" style="left:60px;top:390px;color:#1E2F6B">Эфиопия, светлая</span>
+  </div>
+</section>
+<section class="next">
+  <div><div class="k">Обжариваем</div><div class="v">по четвергам</div></div>
+  <div><div class="k">Партия</div><div class="v">5 кг</div></div>
+  <div><div class="k">У вас через</div><div class="v">1–3 дня</div></div>
+  <div><div class="k">С</div><div class="v">2019 года</div></div>
+</section>
+</body>
+</html>
