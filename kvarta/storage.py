@@ -66,9 +66,9 @@ class SqliteStore:
 class TursoStore:
     """Turso через HTTP API (/v2/pipeline): без нативных зависимостей, работает в serverless."""
 
-    def __init__(self, url: str, token: str):
+    def __init__(self, url: str, token: str, client: httpx.Client | None = None):
         self.endpoint = url.replace("libsql://", "https://", 1).rstrip("/") + "/v2/pipeline"
-        self.headers = {"Authorization": f"Bearer {token}"}
+        self.client = client or httpx.Client(headers={"Authorization": f"Bearer {token}"}, timeout=8)
         self._schema_ready = False
 
     def _execute(self, statements: list[tuple[str, list]]) -> list[dict]:
@@ -77,7 +77,7 @@ class TursoStore:
             for sql, args in statements
         ]
         requests.append({"type": "close"})
-        resp = httpx.post(self.endpoint, json={"requests": requests}, headers=self.headers, timeout=8)
+        resp = self.client.post(self.endpoint, json={"requests": requests})
         resp.raise_for_status()
         results = resp.json()["results"]
         for r in results:
