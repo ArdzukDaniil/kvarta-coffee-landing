@@ -32,6 +32,7 @@ def db_path(tmp_path):
 @pytest.fixture
 def client(db_path):
     store = SqliteStore(db_path)
+    store._connect().close()  # создать таблицу заранее, чтобы rows() работал и без заявок
     app.dependency_overrides[get_store] = lambda: store
     yield TestClient(app)
     app.dependency_overrides.clear()

@@ -1,1 +1,257 @@
-<!doctype html><title>Кварта</title>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кварта — свежая обжарка кофе в Минске. Жарим в четверг, привозим в пятницу</title>
+<meta name="description" content="Маленькая обжарка в Минске. Жарим по четвергам партиями по 5 кг, в пятницу привозим зерно по городу. Подписка 54 BYN в месяц, доставка от 50 BYN бесплатно.">
+<meta name="theme-color" content="#EFEDE6">
+<link rel="canonical" href="https://kvarta-coffee.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Кварта">
+<meta property="og:title" content="Кварта — жарим в четверг, в пятницу кофе у вас">
+<meta property="og:description" content="Маленькая обжарка в Минске: зерно приезжает на 1–3-й день после обжарки. Подписка, разовые заказы, самовывоз с ул. Короля, 9.">
+<meta property="og:url" content="https://kvarta-coffee.vercel.app/">
+<meta property="og:image" content="https://kvarta-coffee.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Листок календаря: четверг — жарим. Обжарка «Кварта», Минск">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/sofia-xc-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/commissioner-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<script src="/main.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Перейти к содержанию</a>
+
+<header class="top">
+  <div class="top__in">
+    <a class="logo" href="#top" aria-label="Кварта, в начало страницы">Кварта</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#coffee">Кофе</a>
+      <a href="#subscription">Подписка</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <a class="btn btn--small" href="#order">Оставить заявку</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. Первый экран -->
+  <section class="hero" id="top">
+    <div class="hero__text">
+      <h1 class="hero__title">Жарим<br>в&nbsp;<em>четверг.</em><br>В&nbsp;пятницу&nbsp;—<br>у&nbsp;вас.</h1>
+      <p class="hero__lead">Маленькая обжарка в&nbsp;Минске. Жарим партиями по&nbsp;5&nbsp;кг и&nbsp;привозим зерно на&nbsp;1–3-й день после обжарки, а&nbsp;не&nbsp;через месяцы на&nbsp;полке магазина.</p>
+      <div class="hero__actions">
+        <a class="btn" href="#order" data-interest="subscription">Оформить подписку</a>
+        <a class="link-arrow" href="#coffee">Заказать один раз</a>
+      </div>
+    </div>
+
+    <div class="leaf cal" aria-labelledby="cal-title">
+      <div class="cal__head">
+        <span id="cal-month">Каждую неделю</span>
+        <span>Обжарка «Кварта»</span>
+      </div>
+      <div class="cal__page" id="cal-page">
+        <div class="cal__num" id="cal-num" aria-hidden="true">Чт</div>
+        <div>
+          <p class="cal__day" id="cal-title">Четверг&nbsp;—<br>жарим</p>
+          <p class="cal__note" id="cal-note">Обжариваем по&nbsp;четвергам, по&nbsp;пятницам развозим по&nbsp;Минску.</p>
+        </div>
+      </div>
+      <ol class="week" id="cal-week" aria-label="Неделя обжарки">
+        <li>пн</li><li>вт</li><li>ср</li><li class="is-roast">чт<small>обжарка</small></li><li class="is-roast">пт<small>доставка</small></li><li>сб</li><li>вс</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 2. Почему свежесть -->
+  <section class="fresh" id="fresh" aria-labelledby="fresh-title">
+    <div class="fresh__intro">
+      <h2 class="h2" id="fresh-title">Почему свежесть&nbsp;— это главное</h2>
+      <p>Обжаренное зерно живёт недолго. Первые недели после обжарки у&nbsp;кофе яркий вкус и&nbsp;аромат, потом он выдыхается и&nbsp;становится плоским. Пачка в&nbsp;магазине может пролежать месяцы, а&nbsp;даты обжарки на&nbsp;ней часто нет вовсе.</p>
+      <p>Мы жарим раз в&nbsp;неделю небольшими партиями, поэтому зерно не&nbsp;успевает залежаться.</p>
+    </div>
+    <ol class="steps">
+      <li class="reveal"><b>Чт</b><span>Обжариваем партию на&nbsp;5&nbsp;кг. Партия маленькая, поэтому зерно не&nbsp;залёживается.</span></li>
+      <li class="reveal"><b>Пт</b><span>Развозим по&nbsp;Минску сами. Или забирайте в&nbsp;мастерской на&nbsp;ул. Короля, 9.</span></li>
+      <li class="reveal"><b>1–3</b><span>день после обжарки&nbsp;— зерно у&nbsp;вас. К&nbsp;выходным оно как раз отдохнёт и&nbsp;раскроется.</span></li>
+    </ol>
+  </section>
+
+  <!-- 3. Кто жарит -->
+  <section class="about" id="about" aria-labelledby="about-title">
+    <figure class="about__photo photo reveal">
+      <img src="/assets/img/roast-800.webp" srcset="/assets/img/roast-800.webp 800w, /assets/img/roast-1400.webp 1400w" sizes="(min-width: 960px) 50vw, 100vw" width="1400" height="932" loading="lazy" alt="Только что обжаренное зерно ссыпается из барабана ростера в лоток охлаждения">
+      <figcaption>Так выглядит минута после обжарки. Фото: Jkafader, Wikimedia Commons</figcaption>
+      <!-- TODO: заменить на фото мастерской «Кварты» -->
+    </figure>
+    <div class="about__text">
+      <h2 class="h2" id="about-title">Кто жарит</h2>
+      <p class="about__lead">Аня и&nbsp;Дмитрий. Раньше работали бариста, с&nbsp;2019&nbsp;года жарят кофе сами.</p>
+      <p>Сейчас у&nbsp;них небольшая мастерская на&nbsp;ул. Короля, 9. По&nbsp;четвергам там пахнет обжаркой, а&nbsp;в&nbsp;остальные дни можно зайти за&nbsp;зерном и&nbsp;спросить, что взять под вашу турку, гейзер или кофемашину.</p>
+      <p class="about__aside">Кварта&nbsp;— четвёртая ступень в&nbsp;музыке. Четверг&nbsp;— четвёртый день недели. Совпадение, но&nbsp;приятное.</p>
+    </div>
+  </section>
+
+  <!-- 4. Ассортимент -->
+  <section class="coffee" id="coffee" aria-labelledby="coffee-title">
+    <div class="section-head">
+      <h2 class="h2" id="coffee-title">Кофе на&nbsp;этой неделе</h2>
+      <p>Всё в&nbsp;зерне, пачки по&nbsp;250&nbsp;г. Нужен помол&nbsp;— напишите в&nbsp;комментарии к&nbsp;заявке.</p>
+      <!-- TODO: уточнить у клиента, мелют ли зерно. Пока предлагаем написать в комментарии. -->
+    </div>
+    <ul class="products">
+      <li class="leaf product reveal">
+        <p class="product__meta">Светлая обжарка · 250&nbsp;г</p>
+        <p class="product__price">32<span>BYN</span></p>
+        <h3 class="product__name">Эфиопия Иргачеффе</h3>
+        <p class="product__notes">Цветочный, бергамот</p>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Эфиопия Иргачеффе">Заказать</a>
+      </li>
+      <li class="leaf product reveal">
+        <p class="product__meta">250&nbsp;г</p>
+        <p class="product__price">29<span>BYN</span></p>
+        <h3 class="product__name">Колумбия Уила</h3>
+        <p class="product__notes">Карамель, красное яблоко</p>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Колумбия Уила">Заказать</a>
+      </li>
+      <li class="leaf product reveal">
+        <p class="product__meta">Под эспрессо · 250&nbsp;г</p>
+        <p class="product__price">26<span>BYN</span></p>
+        <h3 class="product__name">Бразилия Серрадо</h3>
+        <p class="product__notes">Орех, шоколад</p>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Бразилия Серрадо">Заказать</a>
+      </li>
+      <li class="leaf product product--drip reveal">
+        <p class="product__meta">10&nbsp;штук</p>
+        <p class="product__price">18<span>BYN</span></p>
+        <h3 class="product__name">Дрип-пакеты, ассорти</h3>
+        <p class="product__notes">Заварить в&nbsp;офисе или в&nbsp;дороге, без&nbsp;кофемашины</p>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Дрип-пакеты, ассорти">Заказать</a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 5. Подписка -->
+  <section class="sub" id="subscription" aria-labelledby="sub-title">
+    <div class="sub__in">
+      <div class="sub__price" aria-hidden="true">54</div>
+      <div class="sub__text">
+        <h2 class="h2" id="sub-title">Подписка: свежий кофе раз в&nbsp;месяц, и&nbsp;не&nbsp;нужно помнить</h2>
+        <ul class="sub__list">
+          <li><b>2 пачки по&nbsp;250&nbsp;г</b> из&nbsp;свежей обжарки</li>
+          <li><b>Раз в&nbsp;месяц</b>, в&nbsp;пятницу сразу после обжарки</li>
+          <li><b>Доставка по&nbsp;Минску бесплатно</b></li>
+        </ul>
+        <p>Какие сорта привозить, решите вместе с&nbsp;менеджером, когда он перезвонит.</p>
+        <a class="btn btn--paper" href="#order" data-interest="subscription">Оформить подписку</a>
+      </div>
+      <figure class="sub__photo photo">
+        <img src="/assets/img/brew-800.webp" srcset="/assets/img/brew-800.webp 800w, /assets/img/brew-1400.webp 1400w" sizes="(min-width: 960px) 34vw, 100vw" width="1400" height="788" loading="lazy" alt="Кемекс с деревянным воротником на тёмном столе, рядом чашка">
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6. Доставка и самовывоз -->
+  <section class="delivery" id="delivery" aria-labelledby="delivery-title">
+    <h2 class="h2" id="delivery-title">Доставка и&nbsp;самовывоз</h2>
+    <div class="delivery__grid">
+      <div class="leaf ways reveal">
+        <h3 class="ways__title">Привезём</h3>
+        <p class="ways__big">По&nbsp;пятницам</p>
+        <p>По&nbsp;всему Минску, на&nbsp;следующий день после обжарки. Заказы к&nbsp;пятнице принимаем до&nbsp;конца среды.</p>
+        <p><b>Бесплатно от&nbsp;50&nbsp;BYN.</b> Если заказ меньше, стоимость доставки назовёт менеджер.</p>
+        <!-- TODO: уточнить у клиента время приёма заказов и стоимость доставки до 50 BYN -->
+      </div>
+      <div class="leaf ways reveal">
+        <h3 class="ways__title">Заберёте сами</h3>
+        <p class="ways__big">ул. Короля, 9</p>
+        <table class="hours">
+          <caption class="visually-hidden">Часы работы мастерской</caption>
+          <tr><th scope="row">пн–пт</th><td>8:00–20:00</td></tr>
+          <tr><th scope="row">сб–вс</th><td>10:00–18:00</td></tr>
+        </table>
+        <a class="link-arrow" href="https://yandex.by/maps/?text=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%8F%2C%209" target="_blank" rel="noopener">Открыть на&nbsp;карте</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Заявка -->
+  <section class="order" id="order" aria-labelledby="order-title">
+    <div class="order__aside">
+      <h2 class="h2" id="order-title">Оставьте заявку&nbsp;— перезвоним</h2>
+      <ol class="next-steps">
+        <li>Менеджер позвонит в&nbsp;рабочие часы и&nbsp;уточнит сорта, адрес и&nbsp;время.</li>
+        <li>В&nbsp;четверг мы жарим ваш кофе.</li>
+        <li>В&nbsp;пятницу привозим или ждём вас на&nbsp;ул. Короля, 9.</li>
+      </ol>
+      <p class="order__note">Платить на&nbsp;сайте не&nbsp;нужно: способ оплаты обсудите с&nbsp;менеджером.</p>
+      <!-- TODO: уточнить у клиента способы оплаты -->
+    </div>
+
+    <form class="leaf form" id="lead-form" action="/api/lead" method="post" novalidate>
+      <div class="field">
+        <label for="f-name">Как к&nbsp;вам обращаться</label>
+        <input id="f-name" name="name" type="text" autocomplete="given-name" maxlength="80" required aria-describedby="f-name-err">
+        <p class="field__err" id="f-name-err" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="f-phone">Телефон</label>
+        <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+375 (29) 123-45-67" required aria-describedby="f-phone-hint f-phone-err">
+        <p class="field__hint" id="f-phone-hint">Белорусский номер: мобильный или городской</p>
+        <p class="field__err" id="f-phone-err" aria-live="polite"></p>
+      </div>
+      <fieldset class="field choice">
+        <legend>Что вас интересует</legend>
+        <label><input type="radio" name="interest" value="subscription" checked><span>Подписка</span></label>
+        <label><input type="radio" name="interest" value="one_time"><span>Разовый заказ</span></label>
+        <label><input type="radio" name="interest" value="question"><span>Вопрос</span></label>
+        <p class="field__err" id="f-interest-err" aria-live="polite"></p>
+      </fieldset>
+      <div class="field">
+        <label for="f-comment">Комментарий <span class="optional">— по&nbsp;желанию</span></label>
+        <textarea id="f-comment" name="comment" rows="3" maxlength="1000" placeholder="Например: два Иргачеффе, смолоть под турку" aria-describedby="f-comment-err"></textarea>
+        <p class="field__err" id="f-comment-err" aria-live="polite"></p>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label for="f-website">Не заполняйте это поле</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn btn--wide" type="submit" id="f-submit">Отправить заявку</button>
+      <p class="form__legal">Нажимая кнопку, вы соглашаетесь, что мы позвоним по&nbsp;этому номеру насчёт заказа.</p>
+      <div class="form__status" id="f-status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+    </form>
+  </section>
+
+</main>
+
+<footer class="foot" id="contacts">
+  <div class="foot__in">
+    <p class="foot__logo">Кварта</p>
+    <div>
+      <h2 class="foot__title">Мастерская</h2>
+      <p><a href="https://yandex.by/maps/?text=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%8F%2C%209" target="_blank" rel="noopener">Минск, ул. Короля, 9</a></p>
+      <p>пн–пт 8:00–20:00<br>сб–вс 10:00–18:00</p>
+    </div>
+    <div>
+      <h2 class="foot__title">Связаться</h2>
+      <!-- TODO: заменить на реальный телефон и Instagram клиента -->
+      <p><a href="tel:+375290000000" data-phone>+375 (29) 000-00-00</a></p>
+      <p><a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a></p>
+    </div>
+    <div>
+      <h2 class="foot__title">Расписание</h2>
+      <p>Обжарка&nbsp;— по&nbsp;четвергам<br>Доставка&nbsp;— по&nbsp;пятницам</p>
+    </div>
+  </div>
+  <p class="foot__credits">Фото: Jkafader (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>), Zachary Newton и Roger Burger (CC0), Wikimedia Commons. «Кварта»&nbsp;— учебный проект, клиент вымышленный.</p>
+</footer>
+</body>
+</html>

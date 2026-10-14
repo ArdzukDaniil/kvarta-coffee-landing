@@ -50,12 +50,12 @@ def _args(lead: dict) -> list:
 class SqliteStore:
     def __init__(self, path: str):
         self.path = path
-        with self._connect() as db:
-            for sql in SCHEMA:
-                db.execute(sql)
 
     def _connect(self) -> sqlite3.Connection:
-        return sqlite3.connect(self.path, timeout=5)
+        db = sqlite3.connect(self.path, timeout=5)
+        for sql in SCHEMA:  # IF NOT EXISTS — дёшево, и база переживёт удаление файла
+            db.execute(sql)
+        return db
 
     def insert_if_new(self, lead: dict) -> bool:
         with self._connect() as db:
