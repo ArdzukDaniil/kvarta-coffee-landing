@@ -211,6 +211,22 @@ a{color:inherit}
   .product:hover{transform:rotate(-.6deg) translateY(-4px)}
 }
 
+/* ---------- телефон: каталог компактными строками ---------- */
+@media (max-width:639px){
+  .products{gap:28px}
+  .product{display:grid;grid-template-columns:auto 1fr;column-gap:16px;padding:16px}
+  .product__meta{grid-column:1/-1;margin-bottom:12px}
+  .product__price{grid-row:2/5;margin:0;font-size:4.25rem;flex-direction:column;gap:2px}
+  .product__price span{margin:0;font-size:1rem}
+  .product__name{font-size:1.625rem}
+  .product__notes{margin:4px 0 12px;font-size:.9375rem}
+  .product .btn{min-height:44px;padding:8px 18px}
+  .sub__photo{display:none}
+  .choice span{padding:8px 12px}
+}
+.foot a{display:inline-block;padding-block:10px}
+.foot p+p{margin-top:0}
+
 /* ---------- планшет и десктоп ---------- */
 @media (min-width:640px){
   .products,.delivery__grid{grid-template-columns:1fr 1fr}

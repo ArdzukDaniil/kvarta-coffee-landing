@@ -29,12 +29,16 @@ function renderCalendar() {
   if (wd <= 1) note = `Закажите до конца среды, и в пятницу, ${dayMonth(friday)}, кофе будет у вас.`;
   else if (wd === 2) note = `Сегодня последний день, чтобы успеть к пятнице, ${dayMonth(friday)}.`;
   else if (wd === 3) note = `Сегодня жарим. Новые заказы привезём в пятницу, ${dayMonth(addDays(friday, 7))}.`;
-  else if (wd === 4) note = `Сегодня развозим свежую партию. Закажите до среды, и в пятницу, ${dayMonth(friday)}, привезём вам.`;
-  else note = `Закажите до среды, и в пятницу, ${dayMonth(friday)}, кофе будет у вас.`;
+  else if (wd === 4) note = `Сегодня развозим свежую партию. Закажите до конца среды, и в пятницу, ${dayMonth(friday)}, привезём вам.`;
+  else note = `Закажите до конца среды, и в пятницу, ${dayMonth(friday)}, кофе будет у вас.`;
 
-  document.getElementById("cal-month").textContent = `${MONTHS[roast.getMonth()]} ${roast.getFullYear()}`;
+  // С пятницы по воскресенье листок уже показывает следующую неделю — так и подписываем.
+  document.getElementById("cal-month").textContent = wd >= 4
+    ? `Следующая неделя`
+    : `${MONTHS[roast.getMonth()]} ${roast.getFullYear()}`;
   document.getElementById("cal-num").textContent = roast.getDate();
-  document.getElementById("cal-title").innerHTML = wd === 3 ? "Сегодня&nbsp;—<br>жарим" : "Четверг&nbsp;—<br>жарим";
+  document.getElementById("cal-title").innerHTML =
+    `<span class="visually-hidden">${dayMonth(roast)}, </span>` + (wd === 3 ? "сегодня&nbsp;—<br>жарим" : "четверг&nbsp;—<br>жарим");
   document.getElementById("cal-note").textContent = note;
 
   const week = document.getElementById("cal-week");
