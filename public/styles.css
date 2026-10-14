@@ -222,10 +222,11 @@ a{color:inherit}
   .product__notes{margin:4px 0 12px;font-size:.9375rem}
   .product .btn{min-height:44px;padding:8px 18px}
   .sub__photo{display:none}
-  .choice span{padding:8px 12px}
+  .choice{gap:6px}
+  .choice span{padding:8px 10px;font-size:.9375rem}
 }
-.foot a{display:inline-block;padding-block:10px}
-.foot p+p{margin-top:0}
+.foot__in a{display:inline-block;padding-block:10px}
+.foot__in p+p{margin-top:0}
 
 /* ---------- планшет и десктоп ---------- */
 @media (min-width:640px){

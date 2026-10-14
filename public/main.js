@@ -34,7 +34,7 @@ function renderCalendar() {
 
   // С пятницы по воскресенье листок уже показывает следующую неделю — так и подписываем.
   document.getElementById("cal-month").textContent = wd >= 4
-    ? `Следующая неделя`
+    ? `След. неделя · ${MONTHS[roast.getMonth()]}`
     : `${MONTHS[roast.getMonth()]} ${roast.getFullYear()}`;
   document.getElementById("cal-num").textContent = roast.getDate();
   document.getElementById("cal-title").innerHTML =
