@@ -3,7 +3,6 @@
 На Vercel этот файл становится serverless-функцией, а папку public/ раздаёт CDN.
 Локально: uvicorn app:app --reload — тогда статику раздаёт сам FastAPI.
 """
-import json
 import logging
 import os
 from functools import lru_cache
@@ -32,6 +31,10 @@ SAVE_FAILED = (
     "Не получилось отправить заявку — это проблема на нашей стороне. "
     "Попробуйте ещё раз через минуту или позвоните нам."
 )
+
+
+def mask_phone(phone: str) -> str:
+    return phone[:6] + "***" + phone[-4:]
 
 
 @lru_cache
@@ -76,8 +79,11 @@ def create_lead(lead: LeadIn, request: Request, store: LeadStore = Depends(get_s
     try:
         created = store.insert_if_new(record)
     except Exception:
-        # Заявку не теряем совсем: она остаётся в логах Vercel.
-        log.exception("не удалось сохранить заявку: %s", json.dumps(record, ensure_ascii=False))
+        # Имя и комментарий в лог не пишем, номер маскируем: логи Vercel видят все, у кого есть доступ к проекту.
+        log.exception(
+            "не удалось сохранить заявку: phone=%s interest=%s utm_source=%s",
+            mask_phone(lead.phone), lead.interest, lead.attribution.utm_source,
+        )
         return JSONResponse(status_code=503, content={"status": "error", "message": SAVE_FAILED})
 
     if not created:
