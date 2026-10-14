@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Кварта — свежая обжарка кофе в Минске. Жарим в четверг, привозим в пятницу</title>
-<meta name="description" content="Маленькая обжарка в Минске. Жарим по четвергам партиями по 5 кг, в пятницу привозим зерно по городу. Подписка 54 BYN в месяц, доставка от 50 BYN бесплатно.">
+<title>Свежеобжаренный кофе в зёрнах в Минске с доставкой — обжарка «Кварта»</title>
+<meta name="description" content="Обжарка «Кварта» в Минске: кофе в зёрнах свежей обжарки. Жарим по четвергам, в пятницу доставляем по Минску, от 50 BYN бесплатно. Подписка — 54 BYN в месяц.">
 <meta name="theme-color" content="#EFEDE6">
 <link rel="canonical" href="https://kvarta-coffee.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="Кварта">
-<meta property="og:title" content="Кварта — жарим в четверг, в пятницу кофе у вас">
+<meta property="og:title" content="Кварта — жарим кофе в четверг, в пятницу он у вас">
 <meta property="og:description" content="Маленькая обжарка в Минске: зерно приезжает на 1–3-й день после обжарки. Подписка, разовые заказы, самовывоз с ул. Короля, 9.">
 <meta property="og:url" content="https://kvarta-coffee.vercel.app/">
 <meta property="og:image" content="https://kvarta-coffee.vercel.app/og.png">
@@ -19,6 +19,42 @@
 <meta property="og:image:alt" content="Листок календаря: четверг — жарим. Обжарка «Кварта», Минск">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "Кварта",
+  "description": "Маленькая обжарка кофе в Минске. Обжарка по четвергам партиями по 5 кг, доставка по Минску по пятницам.",
+  "url": "https://kvarta-coffee.vercel.app/",
+  "image": "https://kvarta-coffee.vercel.app/og.png",
+  "foundingDate": "2019",
+  "priceRange": "18–54 BYN",
+  "currenciesAccepted": "BYN",
+  "areaServed": {"@type": "City", "name": "Минск"},
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ул. Короля, 9",
+    "addressLocality": "Минск",
+    "addressCountry": "BY"
+  },
+  "openingHoursSpecification": [
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "08:00", "closes": "20:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "10:00", "closes": "18:00"}
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Кофе и подписка",
+    "itemListElement": [
+      {"@type": "Offer", "price": "32", "priceCurrency": "BYN", "itemOffered": {"@type": "Product", "name": "Эфиопия Иргачеффе, 250 г", "description": "Цветочный, бергамот. Светлая обжарка"}},
+      {"@type": "Offer", "price": "29", "priceCurrency": "BYN", "itemOffered": {"@type": "Product", "name": "Колумбия Уила, 250 г", "description": "Карамель, красное яблоко"}},
+      {"@type": "Offer", "price": "26", "priceCurrency": "BYN", "itemOffered": {"@type": "Product", "name": "Бразилия Серрадо, 250 г", "description": "Орех, шоколад. Под эспрессо"}},
+      {"@type": "Offer", "price": "18", "priceCurrency": "BYN", "itemOffered": {"@type": "Product", "name": "Дрип-пакеты, ассорти, 10 штук"}},
+      {"@type": "Offer", "price": "54", "priceCurrency": "BYN", "itemOffered": {"@type": "Service", "name": "Подписка: 2 пачки по 250 г в месяц, доставка бесплатно"}}
+    ]
+  }
+}
+</script>
 <link rel="preload" href="/assets/fonts/sofia-xc-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/commissioner-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css">
@@ -29,11 +65,12 @@
 
 <header class="top">
   <div class="top__in">
-    <a class="logo" href="#top" aria-label="Кварта, в начало страницы">Кварта</a>
+    <a class="logo" href="#top" aria-label="Кварта, обжарка кофе в Минске — в начало страницы"><span class="logo__name">Кварта</span><span class="logo__sub">обжарка кофе · Минск</span></a>
     <nav class="nav" aria-label="Разделы">
       <a href="#coffee">Кофе</a>
       <a href="#subscription">Подписка</a>
       <a href="#delivery">Доставка</a>
+      <a href="#about">О нас</a>
       <a href="#contacts">Контакты</a>
     </nav>
     <a class="btn btn--small" href="#order">Оставить заявку</a>
@@ -45,18 +82,19 @@
   <!-- 1. Первый экран -->
   <section class="hero" id="top">
     <div class="hero__text">
-      <h1 class="hero__title">Жарим<br>в&nbsp;<em>четверг.</em><br>В&nbsp;пятницу&nbsp;—<br>у&nbsp;вас.</h1>
-      <p class="hero__lead">Маленькая обжарка в&nbsp;Минске. Жарим партиями по&nbsp;5&nbsp;кг и&nbsp;привозим зерно на&nbsp;1–3-й день после обжарки, а&nbsp;не&nbsp;через месяцы на&nbsp;полке магазина.</p>
+      <h1 class="hero__title">Жарим кофе<br>в&nbsp;<em>четверг.</em><br>В&nbsp;пятницу&nbsp;—<br>у&nbsp;вас.</h1>
+      <p class="hero__lead">Маленькая обжарка кофе в&nbsp;Минске. Свежее зерно приезжает к&nbsp;вам через 1–3 дня после обжарки, а&nbsp;не&nbsp;через месяцы на&nbsp;полке магазина.</p>
+      <p class="hero__how">Без корзины и&nbsp;оплаты на&nbsp;сайте: оставьте заявку, менеджер перезвонит и&nbsp;всё уточнит.</p>
       <div class="hero__actions">
-        <a class="btn" href="#order" data-interest="subscription">Оформить подписку</a>
-        <a class="link-arrow" href="#coffee">Заказать один раз</a>
+        <a class="btn" href="#order">Оставить заявку</a>
+        <a class="link-arrow" href="#coffee">Кофе и цены</a>
       </div>
     </div>
 
     <div class="leaf cal" role="group" aria-labelledby="cal-title">
       <div class="cal__head">
-        <span id="cal-month">Каждую неделю</span>
-        <span>Обжарка «Кварта»</span>
+        <span>Ближайшая обжарка</span>
+        <span id="cal-month">Каждый четверг</span>
       </div>
       <div class="cal__page" id="cal-page">
         <div class="cal__num" id="cal-num" aria-hidden="true">Чт</div>
@@ -65,7 +103,7 @@
           <p class="cal__note" id="cal-note">Обжариваем по&nbsp;четвергам, по&nbsp;пятницам развозим по&nbsp;Минску.</p>
         </div>
       </div>
-      <ol class="week" id="cal-week" aria-label="Неделя обжарки">
+      <ol class="week" id="cal-week" aria-label="Расписание недели: обжарка в четверг, доставка в пятницу">
         <li>пн</li><li>вт</li><li>ср</li><li class="is-roast">чт<small>обжарка</small></li><li class="is-roast">пт<small>доставка</small></li><li>сб</li><li>вс</li>
       </ol>
     </div>
@@ -79,9 +117,9 @@
       <p>Мы жарим раз в&nbsp;неделю небольшими партиями, поэтому зерно не&nbsp;успевает залежаться.</p>
     </div>
     <ol class="steps">
-      <li class="reveal"><b>Чт</b><span>Обжариваем партию на&nbsp;5&nbsp;кг&nbsp;— свежую на&nbsp;каждую неделю.</span></li>
-      <li class="reveal"><b>Пт</b><span>Развозим по&nbsp;Минску. Или забирайте в&nbsp;мастерской на&nbsp;ул. Короля, 9.</span></li>
-      <li class="reveal"><b>1–3</b><span>день после обжарки&nbsp;— зерно у&nbsp;вас, пока вкус яркий.</span></li>
+      <li class="reveal"><b>Четверг</b><span>Обжариваем партию на&nbsp;5&nbsp;кг&nbsp;— свежую на&nbsp;каждую неделю.</span></li>
+      <li class="reveal"><b>Пятница</b><span>Развозим по&nbsp;Минску. Или забирайте в&nbsp;мастерской на&nbsp;ул. Короля, 9.</span></li>
+      <li class="reveal"><b>1–3&nbsp;дня</b><span>проходит от&nbsp;обжарки до&nbsp;вашей чашки. Зерно приезжает, пока вкус яркий.</span></li>
     </ol>
   </section>
 
@@ -93,7 +131,7 @@
       <!-- TODO: заменить на фото мастерской «Кварты» -->
     </figure>
     <div class="about__text">
-      <h2 class="h2" id="about-title">Кто жарит</h2>
+      <h2 class="h2" id="about-title">Кто мы</h2>
       <p class="about__lead">Аня и&nbsp;Дмитрий. Раньше работали бариста, с&nbsp;2019&nbsp;года жарят кофе сами.</p>
       <p>Сейчас у&nbsp;них небольшая мастерская на&nbsp;ул. Короля, 9. По&nbsp;четвергам там жарят, а&nbsp;в&nbsp;часы работы можно зайти за&nbsp;зерном.</p>
     </div>
@@ -102,8 +140,8 @@
   <!-- 4. Ассортимент -->
   <section class="coffee" id="coffee" aria-labelledby="coffee-title">
     <div class="section-head">
-      <h2 class="h2" id="coffee-title">Кофе на&nbsp;этой неделе</h2>
-      <p>Всё в&nbsp;зерне, пачки по&nbsp;250&nbsp;г. Нужен помол&nbsp;— напишите в&nbsp;комментарии к&nbsp;заявке.</p>
+      <h2 class="h2" id="coffee-title">Кофе и&nbsp;цены</h2>
+      <p>Кофе в&nbsp;зёрнах, пачки по&nbsp;250&nbsp;г. Нажмите «Хочу этот»&nbsp;— сорт попадёт в&nbsp;заявку. Нужен помол&nbsp;— напишите в&nbsp;комментарии.</p>
       <!-- TODO: уточнить у клиента, мелют ли зерно. Пока предлагаем написать в комментарии. -->
     </div>
     <ul class="products">
@@ -112,28 +150,28 @@
         <p class="product__price">32<span>BYN</span></p>
         <h3 class="product__name">Эфиопия Иргачеффе</h3>
         <p class="product__notes">Цветочный, бергамот. Светлая обжарка</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Эфиопия Иргачеффе">Заказать</a>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Эфиопия Иргачеффе" aria-label="Хочу этот: Эфиопия Иргачеффе">Хочу этот</a>
       </li>
       <li class="leaf product reveal">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">29<span>BYN</span></p>
         <h3 class="product__name">Колумбия Уила</h3>
         <p class="product__notes">Карамель, красное яблоко</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Колумбия Уила">Заказать</a>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Колумбия Уила" aria-label="Хочу этот: Колумбия Уила">Хочу этот</a>
       </li>
       <li class="leaf product reveal">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">26<span>BYN</span></p>
         <h3 class="product__name">Бразилия Серрадо</h3>
         <p class="product__notes">Орех, шоколад. Под эспрессо</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Бразилия Серрадо">Заказать</a>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Бразилия Серрадо" aria-label="Хочу этот: Бразилия Серрадо">Хочу этот</a>
       </li>
       <li class="leaf product product--drip reveal">
         <p class="product__meta">Дрипы · 10&nbsp;штук</p>
         <p class="product__price">18<span>BYN</span></p>
         <h3 class="product__name">Дрип-пакеты, ассорти</h3>
         <p class="product__notes">Заварить в&nbsp;офисе или в&nbsp;дороге, без&nbsp;кофемашины</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Дрип-пакеты, ассорти">Заказать</a>
+        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Дрип-пакеты, ассорти" aria-label="Хочу этот: Дрип-пакеты, ассорти">Хочу этот</a>
       </li>
     </ul>
   </section>
@@ -141,16 +179,19 @@
   <!-- 5. Подписка -->
   <section class="sub" id="subscription" aria-labelledby="sub-title">
     <div class="sub__in">
-      <div class="sub__price" aria-hidden="true">54</div>
+      <div class="sub__head">
+        <h2 class="h2" id="sub-title">Подписка на&nbsp;кофе</h2>
+        <p class="sub__lead">Свежий кофе раз в&nbsp;месяц&nbsp;— не&nbsp;нужно помнить, что зерно заканчивается.</p>
+      </div>
+      <p class="sub__price"><span class="visually-hidden">Цена: </span>54<span class="sub__unit">BYN в&nbsp;месяц</span></p>
       <div class="sub__text">
-        <h2 class="h2" id="sub-title">Подписка: свежий кофе раз в&nbsp;месяц, и&nbsp;не&nbsp;нужно помнить</h2>
         <ul class="sub__list">
           <li><b>2 пачки по&nbsp;250&nbsp;г</b> из&nbsp;свежей обжарки</li>
           <li><b>Раз в&nbsp;месяц</b>, в&nbsp;пятницу сразу после обжарки</li>
           <li><b>Доставка по&nbsp;Минску бесплатно</b></li>
         </ul>
         <p>Какие сорта привозить, решите вместе с&nbsp;менеджером, когда он перезвонит.</p>
-        <a class="btn btn--paper" href="#order" data-interest="subscription">Оформить подписку</a>
+        <a class="btn btn--paper" href="#order" data-interest="subscription">Оставить заявку на&nbsp;подписку</a>
       </div>
       <figure class="sub__photo photo">
         <img src="/assets/img/brew-800.webp" srcset="/assets/img/brew-800.webp 800w, /assets/img/brew-1400.webp 1400w" sizes="(min-width: 960px) 34vw, 100vw" width="1400" height="788" loading="lazy" alt="Кемекс с деревянным воротником на тёмном столе, рядом чашка">
@@ -231,22 +272,23 @@
 
 </main>
 
-<footer class="foot" id="contacts">
+<footer class="foot" id="contacts" aria-labelledby="contacts-title">
+  <h2 class="visually-hidden" id="contacts-title">Контакты</h2>
   <div class="foot__in">
     <p class="foot__logo">Кварта</p>
     <div>
-      <h2 class="foot__title">Мастерская</h2>
+      <h3 class="foot__title">Мастерская</h3>
       <p><a href="https://yandex.by/maps/?text=%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9A%D0%BE%D1%80%D0%BE%D0%BB%D1%8F%2C%209" target="_blank" rel="noopener">Минск, ул. Короля, 9</a></p>
       <p>пн–пт 8:00–20:00<br>сб–вс 10:00–18:00</p>
     </div>
     <div>
-      <h2 class="foot__title">Связаться</h2>
+      <h3 class="foot__title">Связаться</h3>
       <!-- TODO: заменить на реальный телефон и Instagram клиента -->
       <p><a href="tel:+375290000000" data-phone>+375 (29) 000-00-00</a></p>
       <p><a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a></p>
     </div>
     <div>
-      <h2 class="foot__title">Расписание</h2>
+      <h3 class="foot__title">Расписание</h3>
       <p>Обжарка&nbsp;— по&nbsp;четвергам<br>Доставка&nbsp;— по&nbsp;пятницам</p>
     </div>
   </div>

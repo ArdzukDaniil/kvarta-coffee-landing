@@ -34,7 +34,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:116px;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--fs-body)/1.55 var(--f-text);text-rendering:optimizeLegibility}
 h1,h2,h3,p,ol,ul,figure{margin:0}
 ol,ul{padding:0;list-style:none}
@@ -70,9 +70,11 @@ a{color:inherit}
 
 /* ---------- шапка ---------- */
 .top{position:sticky;top:0;z-index:10;background:rgba(239,237,230,.94);border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2) blur(6px)}
-.top__in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px var(--gutter);max-width:1440px;margin:0 auto}
-.logo{font:800 1.875rem/1 var(--f-display);text-transform:uppercase;letter-spacing:.03em;text-decoration:none}
-.nav{display:none}
+.top__in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;padding:10px var(--gutter) 0;max-width:1440px;margin:0 auto}
+.logo{display:flex;flex-direction:column;gap:3px;text-decoration:none}
+.logo__name{font:800 1.875rem/.9 var(--f-display);text-transform:uppercase;letter-spacing:.03em}
+.logo__sub{font-size:.75rem;line-height:1;color:var(--muted)}
+.nav{order:3;display:flex;justify-content:space-between;width:100%;margin-top:2px;border-top:1px solid var(--line);font-size:.9375rem}
 .nav a{display:inline-flex;align-items:center;min-height:44px;font-weight:500;text-decoration:none;border-bottom:2px solid transparent}
 .nav a:hover{border-color:var(--red)}
 
@@ -80,7 +82,8 @@ a{color:inherit}
 .hero{display:grid;gap:44px;padding:36px var(--gutter) var(--section);max-width:1440px;margin:0 auto}
 .hero__title{font:800 var(--fs-h1)/.84 var(--f-display);text-transform:uppercase;letter-spacing:-.01em}
 .hero__title em{font-style:normal;color:var(--red)}
-.hero__lead{font-size:var(--fs-lead);color:var(--ink-2);max-width:31em;margin:24px 0 28px}
+.hero__lead{font-size:var(--fs-lead);color:var(--ink-2);max-width:31em;margin:24px 0 14px}
+.hero__how{max-width:34em;margin-bottom:28px;padding-left:14px;border-left:3px solid var(--red);font-size:.9375rem;color:var(--ink-2)}
 .hero__actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
 
 .cal{align-self:start;transform-origin:50% 0;box-shadow:0 1px 0 var(--line),0 7px 0 -3px var(--sheet),0 8px 0 -3px var(--line),0 14px 0 -6px var(--sheet),0 15px 0 -6px var(--line),0 34px 44px -30px rgba(29,27,25,.5)}
@@ -90,20 +93,19 @@ a{color:inherit}
 .cal__day{font:800 clamp(2rem,1.5rem + 2vw,3.375rem)/.9 var(--f-display);text-transform:uppercase}
 .cal__note{margin-top:10px;font-size:.9375rem;color:var(--ink-2);max-width:24em}
 .week{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--line)}
-.week li{padding:10px 0 12px;text-align:center;font:600 1.25rem/1 var(--f-display);text-transform:uppercase;border-right:1px solid var(--line)}
-.week li:last-child{border-right:0}
+.week li{padding:10px 0 12px;text-align:center;font:600 1.25rem/1 var(--f-display);text-transform:uppercase;color:var(--muted)}
 .week small{display:block;margin-top:6px;font:500 .6875rem/1.2 var(--f-text);text-transform:none;color:var(--muted)}
 .week .is-roast{color:var(--red-ink)}
-.week .is-today{background:var(--ink);color:var(--paper)}
-.week .is-today small{color:#D9D3C8}
+.week .is-today{color:var(--ink);box-shadow:inset 0 -3px 0 var(--ink)}
+.week .is-today small{color:var(--ink);font-weight:700}
 
 /* ---------- 2. свежесть ---------- */
 .fresh{display:grid;gap:40px;padding:var(--section) var(--gutter);border-top:2px solid var(--ink);max-width:1440px;margin:0 auto}
 .fresh__intro p{margin-top:18px;max-width:34em;color:var(--ink-2)}
 .fresh__intro p:first-of-type{margin-top:24px}
 .steps{display:grid;gap:28px}
-.steps li{display:grid;grid-template-columns:5.5rem 1fr;gap:16px;align-items:center;padding-top:18px;border-top:1px solid var(--line)}
-.steps b{font:800 clamp(3.5rem,2.6rem + 3vw,5.5rem)/.85 var(--f-display);color:var(--red);text-transform:uppercase}
+.steps li{display:grid;gap:8px;padding-top:18px;border-top:1px solid var(--line)}
+.steps b{font:800 clamp(2.75rem,2.2rem + 1.6vw,3.5rem)/.9 var(--f-display);color:var(--red);text-transform:uppercase;white-space:nowrap}
 
 /* ---------- 3. кто жарит ---------- */
 .about{display:grid;gap:36px;padding:0 var(--gutter) var(--section);max-width:1440px;margin:0 auto}
@@ -129,8 +131,9 @@ a{color:inherit}
 /* ---------- 5. подписка (залита красным) ---------- */
 .sub{background:var(--red);color:var(--on-red);padding:var(--section) var(--gutter)}
 .sub__in{display:grid;gap:32px;max-width:1328px;margin:0 auto}
-.sub__price{font:800 clamp(11rem,7rem + 16vw,22rem)/.74 var(--f-display);color:var(--on-red);letter-spacing:-.02em}
-.sub__price::after{content:"BYN / мес";display:block;margin-top:.12em;font-size:.12em;letter-spacing:.06em;line-height:1}
+.sub__lead{margin-top:16px;font-size:var(--fs-lead);max-width:28em}
+.sub__price{font:800 clamp(9rem,6rem + 14vw,20rem)/.74 var(--f-display);color:var(--on-red);letter-spacing:-.02em}
+.sub__unit{display:block;margin-top:.12em;font-size:.12em;letter-spacing:.06em;line-height:1;text-transform:uppercase}
 .sub .h2{color:#fff}
 .sub__list{margin:26px 0 18px;border-top:1px solid rgba(255,243,238,.4)}
 .sub__list li{padding:12px 0;border-bottom:1px solid rgba(255,243,238,.4);font-size:var(--fs-lead)}
@@ -234,7 +237,9 @@ a{color:inherit}
   .form{padding:32px 32px 28px}
 }
 @media (min-width:960px){
-  .nav{display:flex;gap:28px}
+  .top__in{flex-wrap:nowrap;padding-bottom:10px}
+  .nav{order:0;width:auto;margin:0;border:0;gap:28px;font-size:1rem}
+  html{scroll-padding-top:90px}
   .hero{grid-template-columns:1.1fr 1fr;align-items:center;padding-top:56px;gap:56px}
   .cal{align-self:center;margin-top:12px}
   .cal__page{padding:30px 26px 34px;gap:24px}
@@ -242,10 +247,11 @@ a{color:inherit}
   .week li{padding:14px 0 16px}
   .fresh{grid-template-columns:1fr 1.25fr;gap:56px}
   .steps{gap:0}
-  .steps li{grid-template-columns:7rem 1fr;padding:22px 0}
+  .steps li{grid-template-columns:12.5rem 1fr;align-items:baseline;gap:20px;padding:22px 0}
   .about{grid-template-columns:1.1fr 1fr;align-items:center;gap:56px}
   .section-head{grid-template-columns:1fr 1fr;align-items:end}
-  .sub__in{grid-template-columns:auto 1fr;grid-template-areas:"price text" "photo text";column-gap:72px;align-items:start}
+  .sub__in{grid-template-columns:auto 1fr;grid-template-areas:"head head" "price text" "photo text";column-gap:72px;align-items:start}
+  .sub__head{grid-area:head;margin-bottom:24px}
   .sub__price{grid-area:price}
   .sub__text{grid-area:text;padding-top:12px}
   .sub__photo{grid-area:photo;max-width:420px;margin-top:20px}
