@@ -19,6 +19,9 @@ from kvarta.telegram import TelegramNotifier
 
 log = logging.getLogger("kvarta")
 logging.basicConfig(level=logging.INFO)
+# httpx на уровне INFO пишет полный URL запроса, а в URL Telegram зашит токен бота.
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
