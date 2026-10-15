@@ -189,6 +189,17 @@ a{color:inherit}
 .form__status .btn{margin-top:12px}
 .form.is-done>:not(.form__status){display:none}
 
+/* ---------- страница о данных ---------- */
+.doc{max-width:46rem;margin:0 auto;padding:48px var(--gutter) var(--section)}
+.doc h2{margin:36px 0 10px;font:800 1.75rem/1 var(--f-display);text-transform:uppercase}
+.doc p,.doc li{color:var(--ink-2)}
+.doc p+p{margin-top:12px}
+.doc ul{list-style:disc;padding-left:1.2em}
+.doc li+li{margin-top:6px}
+.doc__lead{margin-top:20px;font-size:var(--fs-lead);color:var(--ink)!important}
+.doc__note{margin-top:36px!important;padding-top:16px;border-top:1px solid var(--line);font-size:.875rem}
+.form__legal a{color:inherit}
+
 /* ---------- подвал ---------- */
 .foot{background:var(--ink);color:#E9E5DC;padding:56px var(--gutter) 28px}
 .foot__in{display:grid;gap:28px;max-width:1328px;margin:0 auto}
