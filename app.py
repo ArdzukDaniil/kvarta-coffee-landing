@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from kvarta.schemas import LeadIn
 from kvarta.storage import LeadStore, SqliteStore, TursoStore
+from kvarta.telegram import TelegramNotifier
 
 log = logging.getLogger("kvarta")
 logging.basicConfig(level=logging.INFO)
@@ -35,6 +36,12 @@ SAVE_FAILED = (
 
 def mask_phone(phone: str) -> str:
     return phone[:6] + "***" + phone[-4:]
+
+
+@lru_cache
+def get_notifier() -> TelegramNotifier | None:
+    token, chat_id = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
+    return TelegramNotifier(token, chat_id) if token and chat_id else None
 
 
 @lru_cache
@@ -63,7 +70,12 @@ async def validation_error(request: Request, exc: RequestValidationError):
 
 
 @app.post("/api/lead")
-def create_lead(lead: LeadIn, request: Request, store: LeadStore = Depends(get_store)):
+def create_lead(
+    lead: LeadIn,
+    request: Request,
+    store: LeadStore = Depends(get_store),
+    notifier: TelegramNotifier | None = Depends(get_notifier),
+):
     if lead.website:
         log.info("honeypot: заявка от бота отброшена")
         return JSONResponse(status_code=201, content={"status": "created"})
@@ -95,6 +107,8 @@ def create_lead(lead: LeadIn, request: Request, store: LeadStore = Depends(get_s
             },
         )
     log.info("новая заявка: %s, %s", lead.interest, lead.attribution.utm_source or "без utm")
+    if notifier:
+        notifier.send(record)
     return JSONResponse(status_code=201, content={"status": "created"})
 
 
