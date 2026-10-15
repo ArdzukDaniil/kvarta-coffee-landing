@@ -38,9 +38,15 @@ INSERT_IF_NEW = f"""
 """
 
 
+SELECT_ALL = f"SELECT id, created_at, {', '.join(LEAD_COLUMNS)} FROM leads ORDER BY id DESC"
+
+
 class LeadStore(Protocol):
     def insert_if_new(self, lead: dict) -> bool:
         """Сохранить заявку. False — такой номер уже был за последние 10 минут."""
+
+    def all_leads(self) -> list[dict]:
+        """Все заявки, новые сверху."""
 
 
 def _args(lead: dict) -> list:
@@ -61,6 +67,11 @@ class SqliteStore:
         with self._connect() as db:
             cur = db.execute(INSERT_IF_NEW, _args(lead))
             return cur.rowcount == 1
+
+    def all_leads(self) -> list[dict]:
+        with self._connect() as db:
+            db.row_factory = sqlite3.Row
+            return [dict(r) for r in db.execute(SELECT_ALL)]
 
 
 class TursoStore:
@@ -91,6 +102,11 @@ class TursoStore:
         results = self._execute(statements)
         self._schema_ready = True
         return results[-1]["affected_row_count"] == 1
+
+    def all_leads(self) -> list[dict]:
+        [result] = self._execute([(SELECT_ALL, [])])
+        names = [c["name"] for c in result["cols"]]
+        return [{n: cell.get("value") for n, cell in zip(names, row)} for row in result["rows"]]
 
 
 def _to_value(value) -> dict:
