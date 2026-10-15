@@ -140,7 +140,8 @@ const form = document.getElementById("lead-form");
 const submit = document.getElementById("f-submit");
 const statusBox = document.getElementById("f-status");
 const phoneInput = form.elements.phone;
-const fallbackPhone = document.querySelector("[data-phone]");
+// Запасной путь, если форма не отправилась. Телефона в брифе нет, поэтому — мастерская.
+const MAP_URL = document.querySelector(".ways .link-arrow")?.getAttribute("href") || "#delivery";
 
 const MESSAGES = {
   name: "Напишите, как к вам обращаться.",
@@ -182,9 +183,8 @@ function showStatus(kind, html) {
   if (kind !== "error") form.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
 }
 
-const callLink = () => fallbackPhone
-  ? `<a href="${fallbackPhone.getAttribute("href")}">${fallbackPhone.textContent}</a>`
-  : "нам";
+const fallback = () =>
+  `Если не выходит, приходите в мастерскую: <a href="${MAP_URL}" target="_blank" rel="noopener">ул. Короля, 9</a>, пн–пт 8:00–20:00, сб–вс 10:00–18:00.`;
 
 let pending = false;
 form.addEventListener("submit", async (e) => {
@@ -226,10 +226,10 @@ form.addEventListener("submit", async (e) => {
       const firstBad = Object.keys(data.errors).map((f) => form.elements[f]).find((el) => el && el.focus);
       firstBad?.focus();
     } else {
-      showStatus("error", `<h3>Не получилось отправить</h3><p>${escapeHtml(data.message || "Сервер не ответил как надо.")}</p><p>Всё, что вы ввели, сохранилось. Нажмите «Отправить заявку» ещё раз или позвоните: ${callLink()}.</p>`);
+      showStatus("error", `<h3>Не получилось отправить</h3><p>${escapeHtml(data.message || "Сервер не ответил как надо.")}</p><p>Всё, что вы ввели, сохранилось. Нажмите «Отправить заявку» ещё раз через минуту.</p><p>${fallback()}</p>`);
     }
   } catch {
-    showStatus("error", `<h3>Нет связи с сервером</h3><p>Похоже, пропал интернет или сервер долго не отвечает. Всё, что вы ввели, сохранилось: проверьте связь и нажмите «Отправить заявку» ещё раз. Или позвоните: ${callLink()}.</p>`);
+    showStatus("error", `<h3>Нет связи с сервером</h3><p>Похоже, пропал интернет или сервер долго не отвечает. Всё, что вы ввели, сохранилось: проверьте связь и нажмите «Отправить заявку» ещё раз.</p><p>${fallback()}</p>`);
   } finally {
     clearTimeout(timer);
     pending = false;
