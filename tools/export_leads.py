@@ -7,6 +7,7 @@
 TURSO_AUTH_TOKEN, иначе локальный data/leads.db.
 """
 import csv
+import re
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -24,11 +25,21 @@ COLUMNS = [
     ("yclid", "yclid"), ("gclid", "gclid"), ("fbclid", "fbclid"), ("referrer", "Пришёл с"),
     ("landing_page", "Страница входа"), ("page_url", "Страница отправки"),
 ]
+FORMULA_START = ("=", "+", "-", "@", "\t", "\r")
 
 
 def to_minsk(utc_text: str) -> str:
     dt = datetime.strptime(utc_text, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
     return dt.astimezone(MINSK).strftime("%d.%m.%Y %H:%M")
+
+
+def safe_cell(value) -> str:
+    """Защита от формул в Excel: имя и комментарий вводит посетитель,
+    и «=HYPERLINK(...)» выполнилось бы у менеджера. Телефон уже нормализован (+375…), его не трогаем."""
+    s = "" if value is None else str(value)
+    if s.startswith(FORMULA_START) and not re.fullmatch(r"\+375\d{9}", s):
+        s = "'" + s
+    return s
 
 
 def export(rows: list[dict], path: Path) -> None:
@@ -38,7 +49,7 @@ def export(rows: list[dict], path: Path) -> None:
         w.writerow([title for _, title in COLUMNS])
         for r in rows:
             r = {**r, "created_at": to_minsk(r["created_at"]), "interest": INTERESTS.get(r["interest"], r["interest"])}
-            w.writerow([r.get(key) or "" for key, _ in COLUMNS])
+            w.writerow([safe_cell(r.get(key)) for key, _ in COLUMNS])
 
 
 if __name__ == "__main__":

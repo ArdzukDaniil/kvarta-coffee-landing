@@ -4,7 +4,7 @@ import json
 import httpx
 
 from kvarta.storage import SqliteStore, TursoStore
-from tools.export_leads import export
+from tools.export_leads import export, safe_cell
 
 LEAD = {"name": "Ольга", "phone": "+375291234567", "interest": "subscription", "utm_source": "instagram", "utm_content": "stories"}
 
@@ -39,3 +39,10 @@ def test_turso_all_leads_maps_columns():
 
     store = TursoStore("libsql://x.turso.io", "t", client=httpx.Client(transport=httpx.MockTransport(handler)))
     assert store.all_leads() == [{"id": "1", "phone": "+375291234567"}]
+
+
+def test_formulas_from_visitors_are_neutralized():
+    assert safe_cell('=HYPERLINK("http://evil","x")').startswith("'=")
+    assert safe_cell("@SUM(1)") == "'@SUM(1)"
+    assert safe_cell("+375291234567") == "+375291234567"  # нормальный телефон остаётся как есть
+    assert safe_cell("Ольга") == "Ольга"
