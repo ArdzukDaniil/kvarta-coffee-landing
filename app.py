@@ -13,7 +13,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from kvarta.catalog import describe
+from kvarta.catalog import describe, subscription_problem
 from kvarta.schemas import LeadIn
 from kvarta.storage import LeadStore, SqliteStore, TursoStore
 from kvarta.telegram import TelegramNotifier
@@ -84,6 +84,12 @@ def create_lead(
     if lead.website:
         log.info("honeypot: заявка от бота отброшена")
         return JSONResponse(status_code=201, content={"status": "created"})
+
+    if lead.interest == "subscription" and (problem := subscription_problem(lead.items)):
+        return JSONResponse(
+            status_code=422,
+            content={"status": "invalid", "message": "Проверьте поля формы.", "errors": {"items": problem}},
+        )
 
     items_text, items_total = describe(lead.items)
     record = {

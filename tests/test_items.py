@@ -62,3 +62,31 @@ def test_page_prices_match_server_catalog():
     html = (Path(__file__).parent.parent / "public" / "index.html").read_text(encoding="utf-8")
     on_page = {sku: int(price) for sku, price in re.findall(r'data-sku="(\w+)"[^>]*data-price="(\d+)"', html)}
     assert on_page == {sku: price for sku, (_, price) in CATALOG.items()}
+
+
+@pytest.mark.parametrize("items", [{"ethiopia": 1, "colombia": 1}, {"brazil": 2}, {"ethiopia": 1}, {}])
+def test_subscription_accepts_up_to_two_packs_of_beans(client, items):
+    http, _ = client
+    assert http.post("/api/lead", json={**BASE, "interest": "subscription", "items": items}).status_code == 201
+
+
+def test_subscription_rejects_more_than_two_packs(client):
+    http, store = client
+    resp = http.post("/api/lead", json={**BASE, "interest": "subscription", "items": {"ethiopia": 2, "brazil": 1}})
+    assert resp.status_code == 422
+    assert "2 пачки" in resp.json()["errors"]["items"]
+    assert store.all_leads() == []
+
+
+def test_subscription_rejects_drip_bags(client):
+    http, _ = client
+    resp = http.post("/api/lead", json={**BASE, "interest": "subscription", "items": {"drip": 1}})
+    assert resp.status_code == 422
+    assert "только зерно" in resp.json()["errors"]["items"]
+
+
+def test_page_subscription_marks_match_server():
+    from kvarta.catalog import SUB_SKUS
+    html = (Path(__file__).parent.parent / "public" / "index.html").read_text(encoding="utf-8")
+    marked = {sku for sku, sub in re.findall(r'data-sku="(\w+)"[^>]*data-sub="(\d)"', html) if sub == "1"}
+    assert marked == SUB_SKUS

@@ -10,6 +10,18 @@ CATALOG: dict[str, tuple[str, int]] = {
 }
 MAX_QTY = 20
 FREE_DELIVERY_FROM = 50
+# Подписка из брифа: 2 пачки по 250 г в месяц за 54 BYN — только зерно, без дрипов.
+SUB_PACKS = 2
+SUB_SKUS = {"ethiopia", "colombia", "brazil"}
+
+
+def subscription_problem(items: dict[str, int]) -> str | None:
+    """Почему этот выбор не подходит для подписки (или None, если подходит)."""
+    if any(sku not in SUB_SKUS for sku in items):
+        return "В подписку входит только зерно — уберите дрип-пакеты или выберите разовый заказ."
+    if sum(items.values()) > SUB_PACKS:
+        return "В подписке 2 пачки в месяц. Нужно больше — напишите об этом в комментарии."
+    return None
 
 
 def describe(items: dict[str, int]) -> tuple[str, int]:
