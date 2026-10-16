@@ -1,6 +1,6 @@
 # «Кварта» — лендинг обжарки кофе
 
-- **Сайт:** https://kvarta-coffee.vercel.app <!-- TODO: проверить после деплоя -->
+- **Сайт:** https://kvarta-ardzukdaniil.vercel.app <!-- TODO: проверить после деплоя -->
 - **Lighthouse, мобильный:** [`docs/lighthouse-mobile.png`](docs/lighthouse-mobile.png) <!-- TODO -->
 - **Лог работы с ИИ:** [`docs/claude-session.txt`](docs/claude-session.txt) <!-- TODO: /export -->
 - **Стек, форма, хранилище и допущения:** [`docs/TECH.md`](docs/TECH.md)
