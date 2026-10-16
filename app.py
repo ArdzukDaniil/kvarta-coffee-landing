@@ -91,7 +91,10 @@ def create_lead(
             content={"status": "invalid", "message": "Проверьте поля формы.", "errors": {"items": problem}},
         )
 
-    items_text, items_total = describe(lead.items)
+    # С вопросом кофе не заказывают: если позиции всё же пришли, молча отбрасываем,
+    # а заявку принимаем — терять её из-за лишних данных нельзя.
+    items = {} if lead.interest == "question" else lead.items
+    items_text, items_total = describe(items)
     record = {
         "name": lead.name,
         "phone": lead.phone,

@@ -90,3 +90,17 @@ def test_page_subscription_marks_match_server():
     html = (Path(__file__).parent.parent / "public" / "index.html").read_text(encoding="utf-8")
     marked = {sku for sku, sub in re.findall(r'data-sku="(\w+)"[^>]*data-sub="(\d)"', html) if sub == "1"}
     assert marked == SUB_SKUS
+
+
+def test_question_drops_items_but_keeps_lead(client):
+    http, store = client
+    resp = http.post("/api/lead", json={**BASE, "interest": "question", "comment": "Что взять для турки?", "items": {"ethiopia": 2}})
+    assert resp.status_code == 201
+    [lead] = store.all_leads()
+    assert lead["items"] is None
+    assert lead["comment"] == "Что взять для турки?"
+
+
+def test_question_without_comment_is_accepted(client):
+    http, _ = client
+    assert http.post("/api/lead", json={**BASE, "interest": "question"}).status_code == 201
