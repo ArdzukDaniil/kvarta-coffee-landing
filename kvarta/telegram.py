@@ -16,13 +16,13 @@ log = logging.getLogger("kvarta")
 MINSK = timezone(timedelta(hours=3))
 
 
-def format_lead(lead: dict, now: datetime | None = None) -> str:
+def format_lead(lead: dict, now: datetime | None = None, update: bool = False) -> str:
     """Текст сообщения в HTML-разметке Telegram. Всё, что ввёл человек, экранируется."""
     e = lambda v: html.escape(str(v)) if v else ""  # noqa: E731
     now = (now or datetime.now(timezone.utc)).astimezone(MINSK)
 
     lines = [
-        f"<b>Новая заявка: {e(INTERESTS.get(lead['interest'], lead['interest']))}</b>",
+        f"<b>{'Дополнение к заявке' if update else 'Новая заявка'}: {e(INTERESTS.get(lead['interest'], lead['interest']))}</b>",
         f"{e(lead['name'])}, {e(lead['phone'])}",
     ]
     if lead.get("items"):
@@ -62,11 +62,11 @@ class TelegramNotifier:
         self.chat_id = chat_id
         self.client = client or httpx.Client(timeout=4)
 
-    def send(self, lead: dict) -> bool:
+    def send(self, lead: dict, update: bool = False) -> bool:
         try:
             resp = self.client.post(self.url, json={
                 "chat_id": self.chat_id,
-                "text": format_lead(lead),
+                "text": format_lead(lead, update=update),
                 "parse_mode": "HTML",
                 "disable_web_page_preview": True,
             })

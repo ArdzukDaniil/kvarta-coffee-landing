@@ -39,6 +39,12 @@ INSERT_IF_NEW = f"""
 
 
 SELECT_ALL = f"SELECT id, created_at, {', '.join(LEAD_COLUMNS)} FROM leads ORDER BY id DESC"
+SELECT_RECENT = f"""
+    SELECT id, interest, items, items_total, comment FROM leads
+    WHERE phone = ? AND created_at > datetime('now', '-{DEDUP_WINDOW_MINUTES} minutes')
+    ORDER BY id DESC LIMIT 1
+"""
+UPDATE_LEAD = "UPDATE leads SET interest = ?, items = ?, items_total = ?, comment = ? WHERE id = ?"
 
 
 class LeadStore(Protocol):
@@ -47,6 +53,12 @@ class LeadStore(Protocol):
 
     def all_leads(self) -> list[dict]:
         """Все заявки, новые сверху."""
+
+    def recent(self, phone: str) -> dict | None:
+        """Последняя заявка с этим номером за 10 минут (для дополнения)."""
+
+    def update(self, lead_id, fields: dict) -> None:
+        """Обновить интерес, кофе и комментарий заявки."""
 
 
 def _args(lead: dict) -> list:
@@ -72,6 +84,16 @@ class SqliteStore:
         with self._connect() as db:
             db.row_factory = sqlite3.Row
             return [dict(r) for r in db.execute(SELECT_ALL)]
+
+    def recent(self, phone: str) -> dict | None:
+        with self._connect() as db:
+            db.row_factory = sqlite3.Row
+            row = db.execute(SELECT_RECENT, [phone]).fetchone()
+            return dict(row) if row else None
+
+    def update(self, lead_id, fields: dict) -> None:
+        with self._connect() as db:
+            db.execute(UPDATE_LEAD, _update_args(lead_id, fields))
 
 
 class TursoStore:
@@ -105,8 +127,24 @@ class TursoStore:
 
     def all_leads(self) -> list[dict]:
         [result] = self._execute([(SELECT_ALL, [])])
-        names = [c["name"] for c in result["cols"]]
-        return [{n: cell.get("value") for n, cell in zip(names, row)} for row in result["rows"]]
+        return _rows(result)
+
+    def recent(self, phone: str) -> dict | None:
+        [result] = self._execute([(SELECT_RECENT, [phone])])
+        rows = _rows(result)
+        return rows[0] if rows else None
+
+    def update(self, lead_id, fields: dict) -> None:
+        self._execute([(UPDATE_LEAD, _update_args(lead_id, fields))])
+
+
+def _rows(result: dict) -> list[dict]:
+    names = [c["name"] for c in result["cols"]]
+    return [{n: cell.get("value") for n, cell in zip(names, row)} for row in result["rows"]]
+
+
+def _update_args(lead_id, fields: dict) -> list:
+    return [fields["interest"], fields["items"], fields["items_total"], fields["comment"], lead_id]
 
 
 def _to_value(value) -> dict:

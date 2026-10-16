@@ -226,6 +226,11 @@ form.addEventListener("submit", async (e) => {
       if (!isQuestion()) baskets[mode()] = {};
       try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(baskets)); } catch { /* не страшно */ }
       renderOrder();
+    } else if (res.status === 200 && data.status === "updated") {
+      showStatus("ok", `<h3>Добавили к вашей заявке</h3><p>${escapeHtml(data.message)}</p>`);
+      if (!isQuestion()) baskets[mode()] = {};
+      try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(baskets)); } catch { /* не страшно */ }
+      renderOrder();
     } else if (res.status === 200 && data.status === "duplicate") {
       showStatus("ok", `<h3>Заявка уже у нас</h3><p>${escapeHtml(data.message)} Если хотите что-то добавить, скажите об этом менеджеру по телефону.</p>`);
     } else if (res.status === 422 && data.errors) {

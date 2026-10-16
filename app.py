@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from kvarta.catalog import describe, subscription_problem
+from kvarta.leads import save
 from kvarta.schemas import LeadIn
 from kvarta.storage import LeadStore, SqliteStore, TursoStore
 from kvarta.telegram import TelegramNotifier
@@ -67,7 +68,10 @@ async def validation_error(request: Request, exc: RequestValidationError):
     for err in exc.errors():
         loc = [p for p in err["loc"] if p != "body"]
         field = str(loc[0]) if loc else "form"
-        errors.setdefault(field, FIELD_ERRORS.get(field, "Проверьте это поле."))
+        message = FIELD_ERRORS.get(field, "Проверьте это поле.")
+        if field == "name" and err["type"] == "string_too_long":
+            message = "Имя получилось слишком длинным — до 80 символов."
+        errors.setdefault(field, message)
     return JSONResponse(
         status_code=422,
         content={"status": "invalid", "message": "Проверьте поля формы.", "errors": errors},
@@ -106,7 +110,7 @@ def create_lead(
         "user_agent": (request.headers.get("user-agent") or "")[:300],
     }
     try:
-        created = store.insert_if_new(record)
+        status, saved = save(store, record)
     except Exception:
         # Имя и комментарий в лог не пишем, номер маскируем: логи Vercel видят все, у кого есть доступ к проекту.
         log.exception(
@@ -115,7 +119,7 @@ def create_lead(
         )
         return JSONResponse(status_code=503, content={"status": "error", "message": SAVE_FAILED})
 
-    if not created:
+    if status == "duplicate":
         return JSONResponse(
             status_code=200,
             content={
@@ -123,9 +127,17 @@ def create_lead(
                 "message": "Мы уже получили заявку с этим номером — менеджер скоро перезвонит.",
             },
         )
-    log.info("новая заявка: %s, %s", lead.interest, lead.attribution.utm_source or "без utm")
+    log.info("заявка %s: %s, %s", status, lead.interest, lead.attribution.utm_source or "без utm")
     if notifier:
-        notifier.send(record)
+        notifier.send(saved, update=status == "updated")
+    if status == "updated":
+        return JSONResponse(
+            status_code=200,
+            content={
+                "status": "updated",
+                "message": "Менеджер увидит всё в одной заявке и перезвонит.",
+            },
+        )
     return JSONResponse(status_code=201, content={"status": "created"})
 
 
