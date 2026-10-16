@@ -9,3 +9,6 @@ data/
 .remember/
 .playwright-mcp/
 shots/
+
+# бриф компании — не публикуем
+kvarta-brief.pdf
