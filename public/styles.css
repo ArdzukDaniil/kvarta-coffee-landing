@@ -295,7 +295,6 @@ a{color:inherit}
   .sheet__name{grid-column:1}
   .sheet__row .qty{grid-column:2;grid-row:1/3}
   .sheet__x{grid-column:3;grid-row:1/3}
-  .sub__photo{display:none}
   .cal__head{padding:12px 14px;font-size:.9375rem;letter-spacing:.03em;white-space:nowrap}
   .choice{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
   .choice span{width:100%;min-height:52px;justify-content:center;text-align:center;padding:6px 4px;font-size:.9375rem;line-height:1.15}
@@ -304,6 +303,9 @@ a{color:inherit}
 .foot__in p+p{margin-top:0}
 
 /* ---------- планшет и десктоп ---------- */
+@media (max-width:959px){
+  .sub__photo{display:none}
+}
 @media (min-width:640px){
   .products,.delivery__grid{grid-template-columns:1fr 1fr}
   .form{padding:32px 32px 28px}
