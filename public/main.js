@@ -146,6 +146,7 @@ const MAP_URL = document.querySelector(".ways .link-arrow")?.getAttribute("href"
 const MESSAGES = {
   name: "Напишите, как к вам обращаться.",
   phone: "Нужен белорусский номер: +375 и 9 цифр, например +375 29 123-45-67.",
+  interest: "Выберите: подписка, разовый заказ или вопрос.",
 };
 
 phoneInput.addEventListener("input", (e) => {
@@ -170,6 +171,7 @@ function validate() {
   const name = form.elements.name.value.trim();
   if (!name) { setError("name", MESSAGES.name); first ??= form.elements.name; }
   if (!isValidPhone(phoneInput.value)) { setError("phone", MESSAGES.phone); first ??= phoneInput; }
+  if (!form.elements.interest.value) { setError("interest", MESSAGES.interest); first ??= form.querySelector("input[name=interest]"); }
   if (first) first.focus();
   return !first;
 }
@@ -203,7 +205,7 @@ form.addEventListener("submit", async (e) => {
     interest: form.elements.interest.value,
     comment: form.elements.comment.value.trim(),
     website: form.elements.website.value,
-    items: { ...order },
+    items: { ...current() },
     attribution: attributionPayload(),
   };
 
@@ -221,8 +223,8 @@ form.addEventListener("submit", async (e) => {
     if (res.status === 201) {
       const list = Object.entries(payload.items).map(([sku, q]) => `${CATALOG[sku].name} × ${q}`).join(", ");
       showStatus("ok", `<h3>Заявка принята</h3><p>Спасибо, ${escapeHtml(payload.name)}! Менеджер перезвонит на ${formatPhone(payload.phone)} в рабочие часы: пн–пт 8:00–20:00, сб–вс 10:00–18:00.</p>${list ? `<p>В заявке: ${list}.</p>` : ""}`);
-      order = {};
-      try { sessionStorage.removeItem(ORDER_KEY); } catch { /* не страшно */ }
+      baskets[mode()] = {};
+      try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(baskets)); } catch { /* не страшно */ }
       renderOrder();
     } else if (res.status === 200 && data.status === "duplicate") {
       showStatus("ok", `<h3>Заявка уже у нас</h3><p>${escapeHtml(data.message)} Если хотите что-то добавить, скажите об этом менеджеру по телефону.</p>`);
@@ -248,82 +250,115 @@ function escapeHtml(s) {
 }
 
 /* ---------- выбор кофе: счётчики в карточках и «листок заказа» в форме ----------
-   Состояние одно — order = { sku: количество }. Карточки, листок и нижняя полоска
-   только рисуют его, поэтому всё всегда совпадает. Цены здесь — для подсказки,
-   сервер считает по своему прайсу (kvarta/catalog.py). */
+   Два отдельных выбора: для разового заказа и для подписки, — переключение
+   «Что вас интересует» ничего не теряет и не смешивает. Карточки, листок и нижняя
+   полоска только рисуют текущий выбор, поэтому всё всегда совпадает.
+   Цены здесь — для подсказки, сервер считает по своему прайсу (kvarta/catalog.py). */
 const CATALOG = Object.fromEntries([...document.querySelectorAll("[data-sku]")].map((el) => [
-  el.dataset.sku, { name: el.dataset.name, price: Number(el.dataset.price) },
+  el.dataset.sku, { name: el.dataset.name, price: Number(el.dataset.price), inSub: el.dataset.sub === "1" },
 ]));
 const ORDER_KEY = "kvarta_order";
 const MAX_QTY = 20;
+const SUB_PACKS = 2;          // подписка из брифа: 2 пачки по 250 г в месяц
+const SUB_PRICE = 54;
 const FREE_DELIVERY_FROM = 50;
-let order = {};
-try { order = JSON.parse(sessionStorage.getItem(ORDER_KEY) || "{}"); } catch { order = {}; }
-for (const sku of Object.keys(order)) if (!CATALOG[sku] || !(order[sku] > 0)) delete order[sku];
 
-let interestTouched = false;
+const baskets = { one_time: {}, subscription: {} };
+try {
+  const saved = JSON.parse(sessionStorage.getItem(ORDER_KEY) || "{}");
+  for (const m of Object.keys(baskets)) Object.assign(baskets[m], saved[m] || {});
+} catch { /* приватный режим или битые данные */ }
+for (const [m, basket] of Object.entries(baskets)) {
+  for (const sku of Object.keys(basket)) {
+    if (!CATALOG[sku] || !(basket[sku] > 0) || (m === "subscription" && !CATALOG[sku].inSub)) delete basket[sku];
+  }
+}
+
+const interest = () => form.elements.interest.value;              // "" — пока не выбрано
+const mode = () => (interest() === "subscription" ? "subscription" : "one_time");
+const current = () => baskets[mode()];
+const countOf = (basket) => Object.values(basket).reduce((n, q) => n + q, 0);
+const pickInterest = (value) => { form.querySelector(`input[name=interest][value=${value}]`).checked = true; };
+
 form.addEventListener("change", (e) => {
-  if (e.target.name === "interest") { interestTouched = true; renderOrder(); }
+  if (e.target.name === "interest") { setError("interest", ""); renderOrder(); }
 });
 
 function setQty(sku, qty) {
-  qty = Math.max(0, Math.min(MAX_QTY, qty));
-  if (qty) order[sku] = qty; else delete order[sku];
-  // Первый выбор кофе — это разовый заказ, если человек сам не выбрал другое.
-  if (qty && !interestTouched && form.elements.interest.value === "subscription") {
-    form.querySelector("input[name=interest][value=one_time]").checked = true;
+  // Кофе из каталога без выбранного интереса — это разовый заказ.
+  if (!interest()) pickInterest("one_time");
+  const basket = current();
+  if (mode() === "subscription") {
+    if (!CATALOG[sku].inSub) return;
+    qty = Math.min(qty, (basket[sku] || 0) + SUB_PACKS - countOf(basket)); // не больше 2 пачек всего
   }
-  try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(order)); } catch { /* не страшно */ }
+  qty = Math.max(0, Math.min(MAX_QTY, qty));
+  if (qty) basket[sku] = qty; else delete basket[sku];
+  try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(baskets)); } catch { /* не страшно */ }
   setError("items", "");
   renderOrder(sku);
 }
 
 const pcs = (n) => `${n} шт`;
-const stepper = (sku, qty, name) => `
+const stepper = (sku, qty, name, canAdd) => `
   <button type="button" class="qty__btn" data-dec="${sku}" aria-label="${qty === 1 ? "Убрать" : "Меньше"}: ${name}">−</button>
   <output class="qty__n" aria-live="polite" aria-label="${name}: ${pcs(qty)}">${qty}</output>
-  <button type="button" class="qty__btn" data-inc="${sku}" aria-label="Больше: ${name}" ${qty >= MAX_QTY ? "disabled" : ""}>+</button>`;
+  <button type="button" class="qty__btn" data-inc="${sku}" aria-label="Больше: ${name}" ${canAdd ? "" : "disabled"}>+</button>`;
 
 function renderOrder(changed) {
-  const entries = Object.entries(order);
-  const count = entries.reduce((n, [, q]) => n + q, 0);
+  const isSub = mode() === "subscription";
+  const basket = current();
+  const entries = Object.entries(basket);
+  const count = countOf(basket);
   const total = entries.reduce((sum, [sku, q]) => sum + CATALOG[sku].price * q, 0);
-  const isSub = form.elements.interest.value === "subscription";
+  const subFull = isSub && count >= SUB_PACKS;
+  const canAdd = (sku) => (isSub ? CATALOG[sku].inSub && !subFull : (basket[sku] || 0) < MAX_QTY);
 
-  // карточки
+  // карточки каталога
   for (const box of document.querySelectorAll("[data-qty]")) {
-    const sku = box.dataset.qty, qty = order[sku] || 0, name = CATALOG[sku].name;
+    const sku = box.dataset.qty, qty = basket[sku] || 0, name = CATALOG[sku].name;
     box.classList.toggle("is-on", qty > 0);
-    box.innerHTML = qty
-      ? `<span class="qty__label">В заявке</span>${stepper(sku, qty, name)}`
-      : `<button type="button" class="btn btn--line qty__add" data-add="${sku}" aria-label="Добавить в заявку: ${name}">Добавить в заявку</button>`;
+    if (qty) {
+      box.innerHTML = `<span class="qty__label">${isSub ? "В подписке" : "В заявке"}</span>${stepper(sku, qty, name, canAdd(sku))}`;
+    } else if (isSub && !CATALOG[sku].inSub) {
+      box.innerHTML = `<span class="qty__note">В подписку не входит&nbsp;— только зерно</span>`;
+    } else {
+      const label = isSub ? "В подписку" : "Добавить в заявку";
+      box.innerHTML = `<button type="button" class="btn btn--line qty__add" data-add="${sku}" aria-label="${label}: ${name}" ${canAdd(sku) ? "" : "disabled"}>${label}</button>`;
+    }
     if (sku === changed && qty) box.querySelector(".qty__n").classList.add("is-bump");
   }
 
   // листок в форме
-  document.getElementById("sheet-title").textContent = isSub ? "Какие сорта хотите в подписке" : "Что привезти";
-  document.getElementById("sheet-empty").hidden = entries.length > 0;
+  document.getElementById("sheet-title").textContent = isSub ? `Выберите ${SUB_PACKS} пачки для подписки` : "Что привезти";
+  const empty = document.getElementById("sheet-empty");
+  empty.hidden = entries.length > 0;
+  empty.innerHTML = isSub
+    ? "Две пачки по&nbsp;250&nbsp;г в&nbsp;месяц&nbsp;— можно разные или две одинаковые. Не&nbsp;знаете, что выбрать,&nbsp;— менеджер предложит."
+    : "Пока ничего не выбрано. Добавьте кофе прямо здесь или просто напишите в&nbsp;комментарии&nbsp;— менеджер всё уточнит.";
   document.getElementById("sheet-list").innerHTML = entries.map(([sku, q]) => {
     const { name, price } = CATALOG[sku];
     return `<li class="sheet__row${sku === changed ? " is-new" : ""}">
       <span class="sheet__name">${name}</span>
-      <span class="qty is-on">${stepper(sku, q, name)}</span>
+      <span class="qty is-on">${stepper(sku, q, name, canAdd(sku))}</span>
       <span class="sheet__sum">${isSub ? "" : `${price * q} BYN`}</span>
-      <button type="button" class="sheet__x" data-remove="${sku}" aria-label="Убрать из заявки: ${name}">×</button>
+      <button type="button" class="sheet__x" data-remove="${sku}" aria-label="Убрать: ${name}">×</button>
     </li>`;
   }).join("");
 
-  // «Добавить:» — сорта, которых ещё нет в заявке, чтобы не листать к каталогу
-  const rest = Object.entries(CATALOG).filter(([sku]) => !order[sku]);
+  // «Добавить:» — то, чего ещё нет в выборе (для подписки — только зерно и пока есть место)
+  const rest = Object.entries(CATALOG).filter(([sku]) => !basket[sku] && canAdd(sku));
   document.getElementById("sheet-add").hidden = !rest.length;
   document.getElementById("sheet-add-list").innerHTML = rest.map(([sku, { name, price }]) =>
-    `<button type="button" class="sheet__chip" data-add="${sku}" aria-label="Добавить в заявку: ${name}, ${price} BYN">+ ${name.split(/[ ,]/)[0]} <span>${price}</span></button>`).join("");
+    `<button type="button" class="sheet__chip" data-add="${sku}" aria-label="Добавить: ${name}${isSub ? "" : `, ${price} BYN`}">+ ${name.split(/[ ,]/)[0]}${isSub ? "" : ` <span>${price}</span>`}</button>`).join("");
 
   const totalEl = document.getElementById("sheet-total");
-  totalEl.hidden = !entries.length;
   if (isSub) {
-    totalEl.innerHTML = `Подписка&nbsp;— 54&nbsp;BYN в&nbsp;месяц, 2&nbsp;пачки. Выбранные сорта&nbsp;— ваши пожелания, менеджер их учтёт.`;
+    totalEl.hidden = false;
+    totalEl.innerHTML = `<b>${count} из ${SUB_PACKS}${subFull ? " ✓" : ""}</b> · ${SUB_PRICE}&nbsp;BYN в&nbsp;месяц, доставка по&nbsp;Минску бесплатно.`
+      + `<span class="sheet__more">Нужно больше&nbsp;— для офиса или кофейни? Напишите в&nbsp;комментарии, подберём объём.</span>`;
   } else {
+    totalEl.hidden = !entries.length;
     const delivery = total >= FREE_DELIVERY_FROM
       ? "доставка по&nbsp;Минску бесплатно"
       : `до&nbsp;бесплатной доставки не&nbsp;хватает ${FREE_DELIVERY_FROM - total}&nbsp;BYN, самовывоз&nbsp;— бесплатно`;
@@ -332,8 +367,9 @@ function renderOrder(changed) {
 
   // нижняя полоска
   const bar = document.getElementById("order-bar");
+  document.getElementById("order-bar-label").textContent = isSub ? "Подписка" : "В заявке";
   document.getElementById("order-bar-text").textContent = isSub
-    ? `${pcs(count)} · подписка`
+    ? `${count} из ${SUB_PACKS} пачек · ${SUB_PRICE} BYN/мес`
     : `${pcs(count)} · ≈ ${total} BYN`;
   bar.dataset.empty = entries.length ? "false" : "true";
   updateBar();
@@ -357,13 +393,14 @@ document.addEventListener("click", (e) => {
   // Запоминаем, где нажали, ДО перерисовки: после неё кнопки t уже нет в документе.
   const scope = t.closest(".sheet") || t.closest("[data-qty]");
   const inSheet = scope?.classList.contains("sheet");
-  if (t.dataset.add || t.dataset.inc) setQty(sku, (order[sku] || 0) + 1);
-  else if (t.dataset.dec) setQty(sku, (order[sku] || 0) - 1);
+  const have = current()[sku] || 0;
+  if (t.dataset.add || t.dataset.inc) setQty(sku, have + 1);
+  else if (t.dataset.dec) setQty(sku, have - 1);
   else setQty(sku, 0);
   // Фокус возвращаем туда же, где нажимали, и без прокрутки — страница не должна прыгать.
   const area = inSheet ? document.getElementById("sheet") : document.querySelector(`[data-qty="${sku}"]`);
-  const next = area.querySelector(`[data-inc="${sku}"]`) || area.querySelector(`[data-add="${sku}"]`)
-    || area.querySelector("[data-add]") || area;
+  const next = area.querySelector(`[data-inc="${sku}"]:not(:disabled)`) || area.querySelector(`[data-dec="${sku}"]`)
+    || area.querySelector(`[data-add="${sku}"]`) || area.querySelector("[data-add]") || area;
   next.focus({ preventScroll: true });
 });
 
@@ -371,14 +408,16 @@ document.addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-interest]");
   if (!btn) return;
-  const radio = form.querySelector(`input[name=interest][value=${btn.dataset.interest}]`);
-  if (radio) { radio.checked = true; interestTouched = true; renderOrder(); }
+  pickInterest(btn.dataset.interest);
+  setError("interest", "");
+  renderOrder();
   e.preventDefault();
   if (form.classList.contains("is-done")) return document.getElementById("order").scrollIntoView();
   document.getElementById("order").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
   form.elements.name.focus({ preventScroll: true });
 });
 
-// Вернулись на страницу с уже выбранным кофе — это разовый заказ, а не подписка по умолчанию.
-if (Object.keys(order).length) form.querySelector("input[name=interest][value=one_time]").checked = true;
+// Вернулись на страницу с уже выбранным кофе — подхватываем, к чему он относился.
+if (countOf(baskets.one_time)) pickInterest("one_time");
+else if (countOf(baskets.subscription)) pickInterest("subscription");
 renderOrder();

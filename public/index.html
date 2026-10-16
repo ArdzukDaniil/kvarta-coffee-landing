@@ -57,7 +57,7 @@
 </script>
 <link rel="preload" href="/assets/fonts/sofia-xc-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/commissioner-cyr.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=20261016d">
+<link rel="stylesheet" href="/styles.css?v=20261016e">
 <script src="/main.js?v=20261016d" defer></script>
 </head>
 <body>
@@ -145,28 +145,28 @@
       <!-- TODO: уточнить у клиента, мелют ли зерно. Пока предлагаем написать в комментарии. -->
     </div>
     <ul class="products">
-      <li class="leaf product reveal" data-sku="ethiopia" data-name="Эфиопия Иргачеффе" data-price="32">
+      <li class="leaf product reveal" data-sku="ethiopia" data-name="Эфиопия Иргачеффе" data-price="32" data-sub="1">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">32<span>BYN</span></p>
         <h3 class="product__name">Эфиопия Иргачеффе</h3>
         <p class="product__notes">Цветочный, бергамот. Светлая обжарка</p>
         <div class="qty" data-qty="ethiopia"><button type="button" class="btn btn--line qty__add" data-add="ethiopia" aria-label="Добавить в заявку: Эфиопия Иргачеффе">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product reveal" data-sku="colombia" data-name="Колумбия Уила" data-price="29">
+      <li class="leaf product reveal" data-sku="colombia" data-name="Колумбия Уила" data-price="29" data-sub="1">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">29<span>BYN</span></p>
         <h3 class="product__name">Колумбия Уила</h3>
         <p class="product__notes">Карамель, красное яблоко</p>
         <div class="qty" data-qty="colombia"><button type="button" class="btn btn--line qty__add" data-add="colombia" aria-label="Добавить в заявку: Колумбия Уила">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product reveal" data-sku="brazil" data-name="Бразилия Серрадо" data-price="26">
+      <li class="leaf product reveal" data-sku="brazil" data-name="Бразилия Серрадо" data-price="26" data-sub="1">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">26<span>BYN</span></p>
         <h3 class="product__name">Бразилия Серрадо</h3>
         <p class="product__notes">Орех, шоколад. Под эспрессо</p>
         <div class="qty" data-qty="brazil"><button type="button" class="btn btn--line qty__add" data-add="brazil" aria-label="Добавить в заявку: Бразилия Серрадо">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product product--drip reveal" data-sku="drip" data-name="Дрип-пакеты, ассорти" data-price="18">
+      <li class="leaf product product--drip reveal" data-sku="drip" data-name="Дрип-пакеты, ассорти" data-price="18" data-sub="0">
         <p class="product__meta">Дрипы · 10&nbsp;штук</p>
         <p class="product__price">18<span>BYN</span></p>
         <h3 class="product__name">Дрип-пакеты, ассорти</h3>
@@ -190,7 +190,8 @@
           <li><b>Раз в&nbsp;месяц</b>, в&nbsp;пятницу сразу после обжарки</li>
           <li><b>Доставка по&nbsp;Минску бесплатно</b></li>
         </ul>
-        <p>Какие сорта привозить, решите вместе с&nbsp;менеджером, когда он перезвонит.</p>
+        <p>Сорта выбираете сами, в&nbsp;заявке: можно два разных или два одинаковых. Не&nbsp;знаете, что взять,&nbsp;— менеджер предложит.</p>
+        <p class="sub__more">Нужно больше&nbsp;— для офиса или кофейни? Напишите об&nbsp;этом в&nbsp;заявке, подберём объём.</p>
         <a class="btn btn--paper" href="#order" data-interest="subscription">Оставить заявку на&nbsp;подписку</a>
       </div>
       <figure class="sub__photo photo">
@@ -250,7 +251,7 @@
       </div>
       <fieldset class="field choice">
         <legend>Что вас интересует</legend>
-        <label><input type="radio" name="interest" value="subscription" checked><span>Подписка</span></label>
+        <label><input type="radio" name="interest" value="subscription" required><span>Подписка</span></label>
         <label><input type="radio" name="interest" value="one_time"><span>Разовый заказ</span></label>
         <label><input type="radio" name="interest" value="question"><span>Вопрос</span></label>
         <p class="field__err" id="f-interest-err" aria-live="polite"></p>
@@ -284,7 +285,7 @@
 </main>
 
 <a class="order-bar" id="order-bar" href="#order" hidden>
-  <span class="order-bar__text"><span class="order-bar__label">В заявке</span> <span id="order-bar-text"></span></span>
+  <span class="order-bar__text"><span class="order-bar__label" id="order-bar-label">В заявке</span> <span id="order-bar-text"></span></span>
   <span class="order-bar__go">Оформить</span>
 </a>
 

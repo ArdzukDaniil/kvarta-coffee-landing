@@ -134,6 +134,7 @@ a{color:inherit}
 .qty__btn{width:44px;height:44px;display:inline-grid;place-items:center;border:2px solid var(--ink);border-radius:var(--radius);background:var(--sheet);color:var(--ink);font:700 1.375rem/1 var(--f-text);cursor:pointer;transition:background-color .15s,color .15s}
 .qty__btn:hover{background:var(--ink);color:var(--paper)}
 .qty__btn:disabled{opacity:.35;cursor:not-allowed;background:var(--sheet);color:var(--ink)}
+.qty__note{margin-top:auto;font-size:.875rem;color:var(--muted)}
 .qty__n{min-width:2.2ch;text-align:center;font:800 1.875rem/1 var(--f-display);color:var(--red)}
 .product .qty__add{align-self:flex-start}
 
@@ -158,6 +159,7 @@ a{color:inherit}
 .sheet__chip:hover{background:var(--ink);color:var(--paper)}
 .sheet__chip:hover span{color:var(--paper)}
 .sheet__total{margin-top:10px;font-size:.9375rem;color:var(--ink-2)}
+.sheet__more{display:block;margin-top:6px;font-size:.875rem;color:var(--muted)}
 .sheet__total b{color:var(--ink);font-size:1.0625rem}
 
 /* нижняя полоска «в заявке» */
@@ -177,7 +179,9 @@ a{color:inherit}
 .sub .h2{color:#fff}
 .sub__list{margin:26px 0 18px;border-top:1px solid rgba(255,243,238,.4)}
 .sub__list li{padding:12px 0;border-bottom:1px solid rgba(255,243,238,.4);font-size:var(--fs-lead)}
-.sub__text>p{margin-bottom:26px;max-width:30em}
+.sub__text>p{margin-bottom:14px;max-width:30em}
+.sub__text>.btn{margin-top:12px}
+.sub__more{font-size:.9375rem;opacity:.85}
 .sub__photo img{aspect-ratio:16/10;box-shadow:0 0 0 10px var(--on-red)}
 
 /* ---------- 6. доставка ---------- */
