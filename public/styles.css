@@ -225,6 +225,7 @@ a{color:inherit}
 .choice input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .choice input:focus-visible+span{outline:3px solid var(--red);outline-offset:2px}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form__qnote{padding:12px 14px;border-left:3px solid var(--red);background:#FBFAF7;color:var(--ink-2)}
 .form__legal{font-size:.8125rem;color:var(--muted)}
 .form__status{padding:16px 18px;border-left:6px solid var(--ink);background:#F4F2EC}
 .form__status:focus{outline:none}

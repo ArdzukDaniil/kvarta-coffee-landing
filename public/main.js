@@ -241,7 +241,7 @@ form.addEventListener("submit", async (e) => {
     clearTimeout(timer);
     pending = false;
     submit.disabled = false;
-    submit.textContent = "Отправить заявку";
+    submit.textContent = submitLabel();
   }
 });
 
@@ -278,6 +278,7 @@ const interest = () => form.elements.interest.value;              // "" — по
 const mode = () => (interest() === "subscription" ? "subscription" : "one_time");
 const current = () => baskets[mode()];
 const isQuestion = () => interest() === "question";
+const submitLabel = () => (isQuestion() ? "Задать вопрос" : "Отправить заявку");
 const COMMENT_HINT = {
   question: "Например: какой сорт подойдёт для турки?",
   other: "Например: смолоть под турку, привезти после 18:00",
@@ -337,6 +338,8 @@ function renderOrder(changed) {
   // листок в форме: при «Вопросе» он не нужен — форма ровно как в ТЗ
   document.getElementById("sheet").hidden = isQuestion();
   form.elements.comment.placeholder = isQuestion() ? COMMENT_HINT.question : COMMENT_HINT.other;
+  document.getElementById("question-note").hidden = !isQuestion();
+  if (!pending) submit.textContent = submitLabel();
   document.getElementById("sheet-title").textContent = isSub ? `Выберите ${SUB_PACKS} пачки для подписки` : "Что привезти";
   const empty = document.getElementById("sheet-empty");
   empty.hidden = entries.length > 0;
