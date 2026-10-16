@@ -34,6 +34,8 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
+/* hidden должен прятать всегда: иначе .field{display:grid} и подобные его перебивают */
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:116px;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--fs-body)/1.55 var(--f-text);text-rendering:optimizeLegibility}
 h1,h2,h3,p,ol,ul,figure{margin:0}
