@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from .catalog import CATALOG, MAX_QTY
 from .phone import normalize_phone
@@ -26,6 +26,20 @@ class Attribution(BaseModel):
     referrer: str | None = Field(None, max_length=500)
     landing_page: str | None = Field(None, max_length=500)
     page_url: str | None = Field(None, max_length=500)
+
+    @model_validator(mode="before")
+    @classmethod
+    def cut_to_limits(cls, data):
+        """Метки рекламы — служебные данные: слишком длинные обрезаем, а не теряем из-за них заявку."""
+        if not isinstance(data, dict):
+            return data
+        data = dict(data)
+        for name, field in cls.model_fields.items():
+            limit = next((m.max_length for m in field.metadata if getattr(m, "max_length", None)), None)
+            value = data.get(name)
+            if value is not None and limit:
+                data[name] = str(value)[:limit]
+        return data
 
 
 class LeadIn(BaseModel):
