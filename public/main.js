@@ -313,6 +313,12 @@ function renderOrder(changed) {
     </li>`;
   }).join("");
 
+  // «Добавить:» — сорта, которых ещё нет в заявке, чтобы не листать к каталогу
+  const rest = Object.entries(CATALOG).filter(([sku]) => !order[sku]);
+  document.getElementById("sheet-add").hidden = !rest.length;
+  document.getElementById("sheet-add-list").innerHTML = rest.map(([sku, { name, price }]) =>
+    `<button type="button" class="sheet__chip" data-add="${sku}" aria-label="Добавить в заявку: ${name}, ${price} BYN">+ ${name.split(/[ ,]/)[0]} <span>${price}</span></button>`).join("");
+
   const totalEl = document.getElementById("sheet-total");
   totalEl.hidden = !entries.length;
   if (isSub) {

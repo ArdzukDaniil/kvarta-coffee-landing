@@ -150,6 +150,13 @@ a{color:inherit}
 .sheet__sum{min-width:4.2em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
 .sheet__x{width:36px;height:36px;border:0;background:none;color:var(--muted);font-size:1.5rem;line-height:1;cursor:pointer;border-radius:var(--radius)}
 .sheet__x:hover{color:var(--red-ink);background:#F4EFEA}
+.sheet__add{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:10px}
+.sheet__add-label{font-size:.875rem;font-weight:600;color:var(--ink-2)}
+.sheet__chips{display:flex;flex-wrap:wrap;gap:6px}
+.sheet__chip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 12px;border:1.5px solid var(--ink);border-radius:999px;background:var(--sheet);color:var(--ink);font:500 .9375rem/1 var(--f-text);cursor:pointer;transition:background-color .15s,color .15s}
+.sheet__chip span{font-weight:700;color:var(--red-ink)}
+.sheet__chip:hover{background:var(--ink);color:var(--paper)}
+.sheet__chip:hover span{color:var(--paper)}
 .sheet__total{margin-top:10px;font-size:.9375rem;color:var(--ink-2)}
 .sheet__total b{color:var(--ink);font-size:1.0625rem}
 
