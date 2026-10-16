@@ -348,12 +348,17 @@ document.addEventListener("click", (e) => {
   const t = e.target.closest("[data-add],[data-inc],[data-dec],[data-remove]");
   if (!t) return;
   const sku = t.dataset.add || t.dataset.inc || t.dataset.dec || t.dataset.remove;
+  // Запоминаем, где нажали, ДО перерисовки: после неё кнопки t уже нет в документе.
+  const scope = t.closest(".sheet") || t.closest("[data-qty]");
+  const inSheet = scope?.classList.contains("sheet");
   if (t.dataset.add || t.dataset.inc) setQty(sku, (order[sku] || 0) + 1);
   else if (t.dataset.dec) setQty(sku, (order[sku] || 0) - 1);
   else setQty(sku, 0);
-  // фокус остаётся на счётчике того же товара, чтобы с клавиатуры можно было жать дальше
-  const scope = t.closest(".sheet") ? document.getElementById("sheet") : document.querySelector(`[data-qty="${sku}"]`);
-  (scope?.querySelector(`[data-inc="${sku}"]`) || scope?.querySelector(`[data-add="${sku}"]`) || document.getElementById("sheet"))?.focus?.();
+  // Фокус возвращаем туда же, где нажимали, и без прокрутки — страница не должна прыгать.
+  const area = inSheet ? document.getElementById("sheet") : document.querySelector(`[data-qty="${sku}"]`);
+  const next = area.querySelector(`[data-inc="${sku}"]`) || area.querySelector(`[data-add="${sku}"]`)
+    || area.querySelector("[data-add]") || area;
+  next.focus({ preventScroll: true });
 });
 
 /* ---------- кнопки «Оставить заявку на подписку» выбирают интерес ---------- */
