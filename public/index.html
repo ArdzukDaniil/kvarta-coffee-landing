@@ -57,8 +57,8 @@
 </script>
 <link rel="preload" href="/assets/fonts/sofia-xc-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/commissioner-cyr.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/styles.css">
-<script src="/main.js" defer></script>
+<link rel="stylesheet" href="/styles.css?v=20261016b">
+<script src="/main.js?v=20261016b" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -141,37 +141,37 @@
   <section class="coffee" id="coffee" aria-labelledby="coffee-title">
     <div class="section-head">
       <h2 class="h2" id="coffee-title">Кофе и&nbsp;цены</h2>
-      <p>Кофе в&nbsp;зёрнах, пачки по&nbsp;250&nbsp;г. Нажмите «Хочу этот»&nbsp;— сорт попадёт в&nbsp;заявку. Нужен помол&nbsp;— напишите в&nbsp;комментарии.</p>
+      <p>Кофе в&nbsp;зёрнах, пачки по&nbsp;250&nbsp;г. Добавьте в&nbsp;заявку, что хотите, и&nbsp;сколько&nbsp;— поменять или убрать можно в&nbsp;любой момент. Нужен помол&nbsp;— напишите в&nbsp;комментарии.</p>
       <!-- TODO: уточнить у клиента, мелют ли зерно. Пока предлагаем написать в комментарии. -->
     </div>
     <ul class="products">
-      <li class="leaf product reveal">
+      <li class="leaf product reveal" data-sku="ethiopia" data-name="Эфиопия Иргачеффе" data-price="32">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">32<span>BYN</span></p>
         <h3 class="product__name">Эфиопия Иргачеффе</h3>
         <p class="product__notes">Цветочный, бергамот. Светлая обжарка</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Эфиопия Иргачеффе" aria-label="Хочу этот: Эфиопия Иргачеффе">Хочу этот</a>
+        <div class="qty" data-qty="ethiopia"><button type="button" class="btn btn--line qty__add" data-add="ethiopia" aria-label="Добавить в заявку: Эфиопия Иргачеффе">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product reveal">
+      <li class="leaf product reveal" data-sku="colombia" data-name="Колумбия Уила" data-price="29">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">29<span>BYN</span></p>
         <h3 class="product__name">Колумбия Уила</h3>
         <p class="product__notes">Карамель, красное яблоко</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Колумбия Уила" aria-label="Хочу этот: Колумбия Уила">Хочу этот</a>
+        <div class="qty" data-qty="colombia"><button type="button" class="btn btn--line qty__add" data-add="colombia" aria-label="Добавить в заявку: Колумбия Уила">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product reveal">
+      <li class="leaf product reveal" data-sku="brazil" data-name="Бразилия Серрадо" data-price="26">
         <p class="product__meta">Зерно · 250&nbsp;г</p>
         <p class="product__price">26<span>BYN</span></p>
         <h3 class="product__name">Бразилия Серрадо</h3>
         <p class="product__notes">Орех, шоколад. Под эспрессо</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Бразилия Серрадо" aria-label="Хочу этот: Бразилия Серрадо">Хочу этот</a>
+        <div class="qty" data-qty="brazil"><button type="button" class="btn btn--line qty__add" data-add="brazil" aria-label="Добавить в заявку: Бразилия Серрадо">Добавить в заявку</button></div>
       </li>
-      <li class="leaf product product--drip reveal">
+      <li class="leaf product product--drip reveal" data-sku="drip" data-name="Дрип-пакеты, ассорти" data-price="18">
         <p class="product__meta">Дрипы · 10&nbsp;штук</p>
         <p class="product__price">18<span>BYN</span></p>
         <h3 class="product__name">Дрип-пакеты, ассорти</h3>
         <p class="product__notes">Заварить в&nbsp;офисе или в&nbsp;дороге, без&nbsp;кофемашины</p>
-        <a class="btn btn--line" href="#order" data-interest="one_time" data-product="Дрип-пакеты, ассорти" aria-label="Хочу этот: Дрип-пакеты, ассорти">Хочу этот</a>
+        <div class="qty" data-qty="drip"><button type="button" class="btn btn--line qty__add" data-add="drip" aria-label="Добавить в заявку: Дрип-пакеты, ассорти">Добавить в заявку</button></div>
       </li>
     </ul>
   </section>
@@ -255,9 +255,16 @@
         <label><input type="radio" name="interest" value="question"><span>Вопрос</span></label>
         <p class="field__err" id="f-interest-err" aria-live="polite"></p>
       </fieldset>
+      <fieldset class="field sheet" id="sheet">
+        <legend id="sheet-title">Что привезти</legend>
+        <p class="sheet__empty" id="sheet-empty">Пока ничего не выбрано. <a href="#coffee">Выберите кофе</a> или просто напишите в&nbsp;комментарии&nbsp;— менеджер всё уточнит.</p>
+        <ul class="sheet__list" id="sheet-list"></ul>
+        <p class="sheet__total" id="sheet-total" aria-live="polite" hidden></p>
+        <p class="field__err" id="f-items-err" aria-live="polite"></p>
+      </fieldset>
       <div class="field">
         <label for="f-comment">Комментарий <span class="optional">— по&nbsp;желанию</span></label>
-        <textarea id="f-comment" name="comment" rows="3" maxlength="1000" placeholder="Например: два Иргачеффе, смолоть под турку" aria-describedby="f-comment-err"></textarea>
+        <textarea id="f-comment" name="comment" rows="3" maxlength="1000" placeholder="Например: смолоть под турку, привезти после 18:00" aria-describedby="f-comment-err"></textarea>
         <p class="field__err" id="f-comment-err" aria-live="polite"></p>
       </div>
       <div class="hp" aria-hidden="true">
@@ -271,6 +278,11 @@
   </section>
 
 </main>
+
+<a class="order-bar" id="order-bar" href="#order" hidden>
+  <span class="order-bar__text"><span class="order-bar__label">В заявке</span> <span id="order-bar-text"></span></span>
+  <span class="order-bar__go">Оформить</span>
+</a>
 
 <footer class="foot" id="contacts" aria-labelledby="contacts-title">
   <h2 class="visually-hidden" id="contacts-title">Контакты</h2>

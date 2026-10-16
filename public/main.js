@@ -203,6 +203,7 @@ form.addEventListener("submit", async (e) => {
     interest: form.elements.interest.value,
     comment: form.elements.comment.value.trim(),
     website: form.elements.website.value,
+    items: { ...order },
     attribution: attributionPayload(),
   };
 
@@ -218,7 +219,11 @@ form.addEventListener("submit", async (e) => {
     const data = await res.json().catch(() => ({}));
 
     if (res.status === 201) {
-      showStatus("ok", `<h3>Заявка принята</h3><p>Спасибо, ${escapeHtml(payload.name)}! Менеджер перезвонит на ${formatPhone(payload.phone)} в рабочие часы: пн–пт 8:00–20:00, сб–вс 10:00–18:00.</p>`);
+      const list = Object.entries(payload.items).map(([sku, q]) => `${CATALOG[sku].name} × ${q}`).join(", ");
+      showStatus("ok", `<h3>Заявка принята</h3><p>Спасибо, ${escapeHtml(payload.name)}! Менеджер перезвонит на ${formatPhone(payload.phone)} в рабочие часы: пн–пт 8:00–20:00, сб–вс 10:00–18:00.</p>${list ? `<p>В заявке: ${list}.</p>` : ""}`);
+      order = {};
+      try { sessionStorage.removeItem(ORDER_KEY); } catch { /* не страшно */ }
+      renderOrder();
     } else if (res.status === 200 && data.status === "duplicate") {
       showStatus("ok", `<h3>Заявка уже у нас</h3><p>${escapeHtml(data.message)} Если хотите что-то добавить, скажите об этом менеджеру по телефону.</p>`);
     } else if (res.status === 422 && data.errors) {
@@ -242,19 +247,127 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-/* ---------- кнопки «Заказать» / «Подписка» заполняют форму ---------- */
+/* ---------- выбор кофе: счётчики в карточках и «листок заказа» в форме ----------
+   Состояние одно — order = { sku: количество }. Карточки, листок и нижняя полоска
+   только рисуют его, поэтому всё всегда совпадает. Цены здесь — для подсказки,
+   сервер считает по своему прайсу (kvarta/catalog.py). */
+const CATALOG = Object.fromEntries([...document.querySelectorAll("[data-sku]")].map((el) => [
+  el.dataset.sku, { name: el.dataset.name, price: Number(el.dataset.price) },
+]));
+const ORDER_KEY = "kvarta_order";
+const MAX_QTY = 20;
+const FREE_DELIVERY_FROM = 50;
+let order = {};
+try { order = JSON.parse(sessionStorage.getItem(ORDER_KEY) || "{}"); } catch { order = {}; }
+for (const sku of Object.keys(order)) if (!CATALOG[sku] || !(order[sku] > 0)) delete order[sku];
+
+let interestTouched = false;
+form.addEventListener("change", (e) => {
+  if (e.target.name === "interest") { interestTouched = true; renderOrder(); }
+});
+
+function setQty(sku, qty) {
+  qty = Math.max(0, Math.min(MAX_QTY, qty));
+  if (qty) order[sku] = qty; else delete order[sku];
+  // Первый выбор кофе — это разовый заказ, если человек сам не выбрал другое.
+  if (qty && !interestTouched && form.elements.interest.value === "subscription") {
+    form.querySelector("input[name=interest][value=one_time]").checked = true;
+  }
+  try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(order)); } catch { /* не страшно */ }
+  setError("items", "");
+  renderOrder(sku);
+}
+
+const pcs = (n) => `${n} шт`;
+const stepper = (sku, qty, name) => `
+  <button type="button" class="qty__btn" data-dec="${sku}" aria-label="${qty === 1 ? "Убрать" : "Меньше"}: ${name}">−</button>
+  <output class="qty__n" aria-live="polite" aria-label="${name}: ${pcs(qty)}">${qty}</output>
+  <button type="button" class="qty__btn" data-inc="${sku}" aria-label="Больше: ${name}" ${qty >= MAX_QTY ? "disabled" : ""}>+</button>`;
+
+function renderOrder(changed) {
+  const entries = Object.entries(order);
+  const count = entries.reduce((n, [, q]) => n + q, 0);
+  const total = entries.reduce((sum, [sku, q]) => sum + CATALOG[sku].price * q, 0);
+  const isSub = form.elements.interest.value === "subscription";
+
+  // карточки
+  for (const box of document.querySelectorAll("[data-qty]")) {
+    const sku = box.dataset.qty, qty = order[sku] || 0, name = CATALOG[sku].name;
+    box.classList.toggle("is-on", qty > 0);
+    box.innerHTML = qty
+      ? `<span class="qty__label">В заявке</span>${stepper(sku, qty, name)}`
+      : `<button type="button" class="btn btn--line qty__add" data-add="${sku}" aria-label="Добавить в заявку: ${name}">Добавить в заявку</button>`;
+    if (sku === changed && qty) box.querySelector(".qty__n").classList.add("is-bump");
+  }
+
+  // листок в форме
+  document.getElementById("sheet-title").textContent = isSub ? "Какие сорта хотите в подписке" : "Что привезти";
+  document.getElementById("sheet-empty").hidden = entries.length > 0;
+  document.getElementById("sheet-list").innerHTML = entries.map(([sku, q]) => {
+    const { name, price } = CATALOG[sku];
+    return `<li class="sheet__row${sku === changed ? " is-new" : ""}">
+      <span class="sheet__name">${name}</span>
+      <span class="qty is-on">${stepper(sku, q, name)}</span>
+      <span class="sheet__sum">${isSub ? "" : `${price * q} BYN`}</span>
+      <button type="button" class="sheet__x" data-remove="${sku}" aria-label="Убрать из заявки: ${name}">×</button>
+    </li>`;
+  }).join("");
+
+  const totalEl = document.getElementById("sheet-total");
+  totalEl.hidden = !entries.length;
+  if (isSub) {
+    totalEl.innerHTML = `Подписка&nbsp;— 54&nbsp;BYN в&nbsp;месяц, 2&nbsp;пачки. Выбранные сорта&nbsp;— ваши пожелания, менеджер их учтёт.`;
+  } else {
+    const delivery = total >= FREE_DELIVERY_FROM
+      ? "доставка по&nbsp;Минску бесплатно"
+      : `до&nbsp;бесплатной доставки не&nbsp;хватает ${FREE_DELIVERY_FROM - total}&nbsp;BYN, самовывоз&nbsp;— бесплатно`;
+    totalEl.innerHTML = `<b>≈ ${total}&nbsp;BYN</b> по&nbsp;прайсу, ${delivery}. Точную сумму подтвердит менеджер.`;
+  }
+
+  // нижняя полоска
+  const bar = document.getElementById("order-bar");
+  document.getElementById("order-bar-text").textContent = isSub
+    ? `${pcs(count)} · подписка`
+    : `${pcs(count)} · ≈ ${total} BYN`;
+  bar.dataset.empty = entries.length ? "false" : "true";
+  updateBar();
+}
+
+// Полоску прячем, пока форма на экране или заявка уже отправлена.
+let formInView = false;
+function updateBar() {
+  const bar = document.getElementById("order-bar");
+  bar.hidden = bar.dataset.empty === "true" || formInView || form.classList.contains("is-done");
+}
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(([e]) => { formInView = e.isIntersecting; updateBar(); }, { threshold: 0.15 })
+    .observe(document.getElementById("order"));
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-add],[data-inc],[data-dec],[data-remove]");
+  if (!t) return;
+  const sku = t.dataset.add || t.dataset.inc || t.dataset.dec || t.dataset.remove;
+  if (t.dataset.add || t.dataset.inc) setQty(sku, (order[sku] || 0) + 1);
+  else if (t.dataset.dec) setQty(sku, (order[sku] || 0) - 1);
+  else setQty(sku, 0);
+  // фокус остаётся на счётчике того же товара, чтобы с клавиатуры можно было жать дальше
+  const scope = t.closest(".sheet") ? document.getElementById("sheet") : document.querySelector(`[data-qty="${sku}"]`);
+  (scope?.querySelector(`[data-inc="${sku}"]`) || scope?.querySelector(`[data-add="${sku}"]`) || document.getElementById("sheet"))?.focus?.();
+});
+
+/* ---------- кнопки «Оставить заявку на подписку» выбирают интерес ---------- */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-interest]");
   if (!btn) return;
   const radio = form.querySelector(`input[name=interest][value=${btn.dataset.interest}]`);
-  if (radio) radio.checked = true;
-  const product = btn.dataset.product;
-  const comment = form.elements.comment;
-  if (product && !comment.value.includes(product)) {
-    comment.value = comment.value ? `${comment.value.trim()}\n${product} — 1 шт.` : `${product} — 1 шт.`;
-  }
+  if (radio) { radio.checked = true; interestTouched = true; renderOrder(); }
   e.preventDefault();
   if (form.classList.contains("is-done")) return document.getElementById("order").scrollIntoView();
   document.getElementById("order").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
   form.elements.name.focus({ preventScroll: true });
 });
+
+// Вернулись на страницу с уже выбранным кофе — это разовый заказ, а не подписка по умолчанию.
+if (Object.keys(order).length) form.querySelector("input[name=interest][value=one_time]").checked = true;
+renderOrder();

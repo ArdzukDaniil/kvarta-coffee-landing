@@ -128,6 +128,39 @@ a{color:inherit}
 .product__notes{margin:8px 0 20px;color:var(--ink-2)}
 .product .btn{margin-top:auto;align-self:flex-start}
 
+/* счётчик количества: в карточке и в листке заказа */
+.qty{margin-top:auto;display:flex;align-items:center;gap:6px;min-height:52px}
+.qty__label{margin-right:auto;font:600 1rem/1 var(--f-display);text-transform:uppercase;letter-spacing:.06em;color:var(--red-ink)}
+.qty__btn{width:44px;height:44px;display:inline-grid;place-items:center;border:2px solid var(--ink);border-radius:var(--radius);background:var(--sheet);color:var(--ink);font:700 1.375rem/1 var(--f-text);cursor:pointer;transition:background-color .15s,color .15s}
+.qty__btn:hover{background:var(--ink);color:var(--paper)}
+.qty__btn:disabled{opacity:.35;cursor:not-allowed;background:var(--sheet);color:var(--ink)}
+.qty__n{min-width:2.2ch;text-align:center;font:800 1.875rem/1 var(--f-display);color:var(--red)}
+.product .qty__add{align-self:flex-start}
+
+/* листок заказа в форме */
+.form .sheet{padding:14px 16px 12px;border:2px dashed #B9B3A8;border-radius:var(--radius);background:#FBFAF7}
+.sheet legend{padding:0 6px;margin-left:-6px}
+.sheet__empty{font-size:.9375rem;color:var(--ink-2)}
+.sheet__list{display:grid}
+.sheet__row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:4px 10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.sheet__row .qty{margin:0;min-height:0;gap:4px}
+.sheet__row .qty__btn{width:36px;height:36px;font-size:1.125rem}
+.sheet__row .qty__n{font-size:1.5rem}
+.sheet__name{font-weight:500;line-height:1.25}
+.sheet__sum{min-width:4.2em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.sheet__x{width:36px;height:36px;border:0;background:none;color:var(--muted);font-size:1.5rem;line-height:1;cursor:pointer;border-radius:var(--radius)}
+.sheet__x:hover{color:var(--red-ink);background:#F4EFEA}
+.sheet__total{margin-top:10px;font-size:.9375rem;color:var(--ink-2)}
+.sheet__total b{color:var(--ink);font-size:1.0625rem}
+
+/* нижняя полоска «в заявке» */
+.order-bar{position:fixed;z-index:15;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:10px 12px 10px 18px;background:var(--ink);color:var(--paper);text-decoration:none;border-radius:var(--radius);box-shadow:0 12px 30px -10px rgba(29,27,25,.55)}
+.order-bar[hidden]{display:none}
+.order-bar__label{display:block;font-size:.75rem;font-weight:500;color:#C9C3B8;text-transform:uppercase;letter-spacing:.06em}
+.order-bar__text{font-weight:600;font-size:.9375rem;line-height:1.25}
+.order-bar__go{flex:none;white-space:nowrap;padding:10px 14px;background:var(--red);color:#fff;font-weight:700;border-radius:var(--radius)}
+.order-bar__go::after{content:" →"}
+
 /* ---------- 5. подписка (залита красным) ---------- */
 .sub{background:var(--red);color:var(--on-red);padding:var(--section) var(--gutter)}
 .sub__in{display:grid;gap:32px;max-width:1328px;margin:0 auto}
@@ -211,6 +244,12 @@ a{color:inherit}
 
 /* ---------- движение ---------- */
 @media (prefers-reduced-motion:no-preference){
+  .qty__n.is-bump{animation:bump .35s var(--ease)}
+  @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(-4deg)}100%{transform:none}}
+  .sheet__row.is-new{animation:slip .35s var(--ease)}
+  @keyframes slip{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .order-bar{animation:rise .3s var(--ease)}
+  @keyframes rise{from{transform:translateY(120%)}to{transform:none}}
   .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
   .js .reveal.is-in{opacity:1;transform:none}
   .products .reveal:nth-child(2){transition-delay:.06s}
@@ -235,10 +274,17 @@ a{color:inherit}
   .product__name{font-size:1.625rem}
   .product__notes{margin:4px 0 12px;font-size:.9375rem}
   .product .btn{min-height:44px;padding:8px 18px}
+  .product .qty{grid-column:2;min-height:44px}
+  .form .sheet{padding:12px 10px 10px}
+  .sheet__row{grid-template-columns:1fr auto auto;}
+  .sheet__sum{grid-column:1;grid-row:2;text-align:left;font-weight:500;color:var(--muted)}
+  .sheet__name{grid-column:1}
+  .sheet__row .qty{grid-column:2;grid-row:1/3}
+  .sheet__x{grid-column:3;grid-row:1/3}
   .sub__photo{display:none}
   .cal__head{padding:12px 14px;font-size:.9375rem;letter-spacing:.03em;white-space:nowrap}
-  .choice{gap:6px}
-  .choice span{padding:8px 10px;font-size:.9375rem}
+  .choice{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .choice span{width:100%;min-height:52px;justify-content:center;text-align:center;padding:6px 4px;font-size:.9375rem;line-height:1.15}
 }
 .foot__in a{display:inline-block;padding-block:10px}
 .foot__in p+p{margin-top:0}
@@ -249,6 +295,7 @@ a{color:inherit}
   .form{padding:32px 32px 28px}
 }
 @media (min-width:960px){
+  .order-bar{left:auto;right:24px;bottom:24px;max-width:420px}
   .top__in{flex-wrap:nowrap;padding-bottom:10px}
   .nav{order:0;width:auto;margin:0;border:0;gap:28px;font-size:1rem}
   html{scroll-padding-top:90px}
