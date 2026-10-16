@@ -236,6 +236,7 @@ a{color:inherit}
   .product__notes{margin:4px 0 12px;font-size:.9375rem}
   .product .btn{min-height:44px;padding:8px 18px}
   .sub__photo{display:none}
+  .cal__head{padding:12px 14px;font-size:.9375rem;letter-spacing:.03em;white-space:nowrap}
   .choice{gap:6px}
   .choice span{padding:8px 10px;font-size:.9375rem}
 }
