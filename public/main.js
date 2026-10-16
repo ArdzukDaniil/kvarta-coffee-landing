@@ -205,7 +205,7 @@ form.addEventListener("submit", async (e) => {
     interest: form.elements.interest.value,
     comment: form.elements.comment.value.trim(),
     website: form.elements.website.value,
-    items: { ...current() },
+    items: isQuestion() ? {} : { ...current() },
     attribution: attributionPayload(),
   };
 
@@ -223,7 +223,7 @@ form.addEventListener("submit", async (e) => {
     if (res.status === 201) {
       const list = Object.entries(payload.items).map(([sku, q]) => `${CATALOG[sku].name} × ${q}`).join(", ");
       showStatus("ok", `<h3>Заявка принята</h3><p>Спасибо, ${escapeHtml(payload.name)}! Менеджер перезвонит на ${formatPhone(payload.phone)} в рабочие часы: пн–пт 8:00–20:00, сб–вс 10:00–18:00.</p>${list ? `<p>В заявке: ${list}.</p>` : ""}`);
-      baskets[mode()] = {};
+      if (!isQuestion()) baskets[mode()] = {};
       try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(baskets)); } catch { /* не страшно */ }
       renderOrder();
     } else if (res.status === 200 && data.status === "duplicate") {
@@ -277,6 +277,11 @@ for (const [m, basket] of Object.entries(baskets)) {
 const interest = () => form.elements.interest.value;              // "" — пока не выбрано
 const mode = () => (interest() === "subscription" ? "subscription" : "one_time");
 const current = () => baskets[mode()];
+const isQuestion = () => interest() === "question";
+const COMMENT_HINT = {
+  question: "Например: какой сорт подойдёт для турки?",
+  other: "Например: смолоть под турку, привезти после 18:00",
+};
 const countOf = (basket) => Object.values(basket).reduce((n, q) => n + q, 0);
 const pickInterest = (value) => { form.querySelector(`input[name=interest][value=${value}]`).checked = true; };
 
@@ -285,8 +290,8 @@ form.addEventListener("change", (e) => {
 });
 
 function setQty(sku, qty) {
-  // Кофе из каталога без выбранного интереса — это разовый заказ.
-  if (!interest()) pickInterest("one_time");
+  // Кофе из каталога без выбранного интереса или при «Вопросе» — это разовый заказ.
+  if (!interest() || isQuestion()) pickInterest("one_time");
   const basket = current();
   if (mode() === "subscription") {
     if (!CATALOG[sku].inSub) return;
@@ -329,7 +334,9 @@ function renderOrder(changed) {
     if (sku === changed && qty) box.querySelector(".qty__n").classList.add("is-bump");
   }
 
-  // листок в форме
+  // листок в форме: при «Вопросе» он не нужен — форма ровно как в ТЗ
+  document.getElementById("sheet").hidden = isQuestion();
+  form.elements.comment.placeholder = isQuestion() ? COMMENT_HINT.question : COMMENT_HINT.other;
   document.getElementById("sheet-title").textContent = isSub ? `Выберите ${SUB_PACKS} пачки для подписки` : "Что привезти";
   const empty = document.getElementById("sheet-empty");
   empty.hidden = entries.length > 0;
@@ -371,7 +378,7 @@ function renderOrder(changed) {
   document.getElementById("order-bar-text").textContent = isSub
     ? `${count} из ${SUB_PACKS} пачек · ${SUB_PRICE} BYN/мес`
     : `${pcs(count)} · ≈ ${total} BYN`;
-  bar.dataset.empty = entries.length ? "false" : "true";
+  bar.dataset.empty = entries.length && !isQuestion() ? "false" : "true";
   updateBar();
 }
 
