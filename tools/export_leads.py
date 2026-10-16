@@ -20,7 +20,7 @@ from kvarta.schemas import INTERESTS  # noqa: E402
 MINSK = timezone(timedelta(hours=3))
 COLUMNS = [
     ("created_at", "Когда (Минск)"), ("name", "Имя"), ("phone", "Телефон"), ("interest", "Интерес"),
-    ("comment", "Комментарий"), ("utm_source", "Источник"), ("utm_medium", "Тип трафика"),
+    ("items", "Что заказал"), ("items_total", "Сумма по прайсу, BYN"), ("comment", "Комментарий"), ("utm_source", "Источник"), ("utm_medium", "Тип трафика"),
     ("utm_campaign", "Кампания"), ("utm_content", "Объявление"), ("utm_term", "Ключевое слово"),
     ("yclid", "yclid"), ("gclid", "gclid"), ("fbclid", "fbclid"), ("referrer", "Пришёл с"),
     ("landing_page", "Страница входа"), ("page_url", "Страница отправки"),

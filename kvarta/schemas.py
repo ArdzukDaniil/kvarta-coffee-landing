@@ -2,6 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
+from .catalog import CATALOG, MAX_QTY
 from .phone import normalize_phone
 
 INTERESTS = {
@@ -32,6 +33,8 @@ class LeadIn(BaseModel):
     phone: str
     interest: Literal["subscription", "one_time", "question"]
     comment: str = Field("", max_length=1000)
+    # Что положить в заявку: {"ethiopia": 2, "drip": 1}. Цены сервер берёт из своего каталога.
+    items: dict[str, int] = {}
     attribution: Attribution = Attribution()
     # Ловушка для ботов: поле скрыто от людей, заполняют его только скрипты.
     website: str = ""
@@ -40,6 +43,13 @@ class LeadIn(BaseModel):
     @classmethod
     def strip(cls, v):
         return v.strip() if isinstance(v, str) else v
+
+    @field_validator("items")
+    @classmethod
+    def known_items(cls, v: dict[str, int]) -> dict[str, int]:
+        if any(sku not in CATALOG for sku in v) or any(not 0 <= q <= MAX_QTY for q in v.values()):
+            raise ValueError("bad_items")
+        return {sku: q for sku, q in v.items() if q > 0}
 
     @field_validator("phone")
     @classmethod

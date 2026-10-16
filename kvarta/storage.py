@@ -12,7 +12,7 @@ import httpx
 DEDUP_WINDOW_MINUTES = 10
 
 LEAD_COLUMNS = (
-    "name", "phone", "interest", "comment",
+    "name", "phone", "interest", "comment", "items", "items_total",
     "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
     "yclid", "gclid", "fbclid",
     "referrer", "landing_page", "page_url", "user_agent",

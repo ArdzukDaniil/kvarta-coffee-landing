@@ -13,6 +13,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from kvarta.catalog import describe
 from kvarta.schemas import LeadIn
 from kvarta.storage import LeadStore, SqliteStore, TursoStore
 from kvarta.telegram import TelegramNotifier
@@ -30,6 +31,7 @@ FIELD_ERRORS = {
     "phone": "Нужен белорусский номер: +375 и 9 цифр, например +375 29 123-45-67.",
     "interest": "Выберите, что вас интересует.",
     "comment": "Комментарий получился слишком длинным — сократите до 1000 знаков.",
+    "items": "Что-то не так со списком кофе — обновите страницу и выберите заново.",
 }
 SAVE_FAILED = (
     "Не получилось отправить заявку — это проблема на нашей стороне. "
@@ -83,11 +85,14 @@ def create_lead(
         log.info("honeypot: заявка от бота отброшена")
         return JSONResponse(status_code=201, content={"status": "created"})
 
+    items_text, items_total = describe(lead.items)
     record = {
         "name": lead.name,
         "phone": lead.phone,
         "interest": lead.interest,
         "comment": lead.comment,
+        "items": items_text or None,
+        "items_total": items_total or None,
         **lead.attribution.model_dump(),
         "user_agent": (request.headers.get("user-agent") or "")[:300],
     }

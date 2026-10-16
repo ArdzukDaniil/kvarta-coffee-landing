@@ -25,6 +25,11 @@ def format_lead(lead: dict, now: datetime | None = None) -> str:
         f"<b>Новая заявка: {e(INTERESTS.get(lead['interest'], lead['interest']))}</b>",
         f"{e(lead['name'])}, {e(lead['phone'])}",
     ]
+    if lead.get("items"):
+        lines.append("")
+        lines.extend(f"☕ {e(item)}" for item in lead["items"].split("; "))
+        if lead["interest"] != "subscription":
+            lines.append(f"≈ {e(lead.get('items_total'))} BYN по прайсу")
     if lead.get("comment"):
         lines.append(f"💬 {e(lead['comment'])}")
 
