@@ -365,7 +365,8 @@ function renderOrder(changed) {
   const rest = Object.entries(CATALOG).filter(([sku]) => !basket[sku] && canAdd(sku));
   document.getElementById("sheet-add").hidden = !rest.length;
   document.getElementById("sheet-add-list").innerHTML = rest.map(([sku, { name, price }]) =>
-    `<button type="button" class="sheet__chip" data-add="${sku}" aria-label="Добавить: ${name}${isSub ? "" : `, ${price} BYN`}">+ ${name.split(/[ ,]/)[0]}${isSub ? "" : ` <span>${price}</span>`}</button>`).join("");
+    // Доступное имя начинается с видимого текста («+ Эфиопия 32»), а полное название — скрытым хвостом
+    `<button type="button" class="sheet__chip" data-add="${sku}">+ ${name.split(/[ ,]/)[0]}${isSub ? "" : ` <span>${price}</span>`}<span class="visually-hidden">${isSub ? "" : " BYN"} — добавить «${name}»</span></button>`).join("");
 
   const totalEl = document.getElementById("sheet-total");
   if (isSub) {

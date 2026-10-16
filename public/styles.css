@@ -183,7 +183,7 @@ a{color:inherit}
 .sub__list li{padding:12px 0;border-bottom:1px solid rgba(255,243,238,.4);font-size:var(--fs-lead)}
 .sub__text>p{margin-bottom:14px;max-width:30em}
 .sub__text>.btn{margin-top:12px}
-.sub__more{font-size:.9375rem;opacity:.85}
+.sub__more{font-size:.9375rem;color:var(--on-red)}
 .sub__photo img{aspect-ratio:16/10;box-shadow:0 0 0 10px var(--on-red)}
 
 /* ---------- 6. доставка ---------- */
