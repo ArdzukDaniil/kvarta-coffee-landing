@@ -1,7 +1,7 @@
 # «Кварта» — лендинг обжарки кофе
 
 - **Сайт:** https://kvarta-ardzukdaniil.vercel.app
-- **Lighthouse, мобильный:** [`docs/lighthouse-mobile.png`](docs/lighthouse-mobile.png) <!-- TODO -->
+- **Lighthouse, мобильный:** 99 / 100 / 100 / 100 — [скриншот](docs/lighthouse-mobile.png), [полный отчёт](docs/lighthouse-mobile.report.html). Performance между прогонами колеблется в пределах 94–99, остальные категории стабильно 100.
 - **Лог работы с ИИ:** [`docs/claude-session.txt`](docs/claude-session.txt) <!-- TODO: /export -->
 - **Стек, форма, хранилище и допущения:** [`docs/TECH.md`](docs/TECH.md)
 
